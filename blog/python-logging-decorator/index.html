@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       Python Logging Decorator 
+    
+  </title>
+  <link rel="canonical" href="/blog/python-logging-decorator/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        Python Logging Decorator
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+        <div class="meta">
+            <span class="date" title="Fri Mar 7 2014 18:22:56 CET">Mar 7, 2014</span>
+            
+        </div>
+        <div class="page-content">
+            <p>Hin und wieder ist es notwendig, die Parameter und die Rückgabewerte
+einer Funktion zu überprüfen. In Python kann man hierfür das logging
+Paket und den später folgenden Decorator für die Funktionen verwenden.</p>
+
+<p>Zuvor müssen wir aber erstmal dafür sorgen, dass die Informationen
+irgendwo ausgegeben werden. In diesem Fall auf der Konsole.</p>
+
+<pre><code class="language-python">import logging
+
+# Einen Logger mit dem Namen foo.bar erstellen.
+logger = logging.getLogger('foo.bar')
+# Den Log-Level DEBUG setzten.
+logger.setLevel(logging.DEBUG)
+# Festlegen, dass die Meldungen auf der Konsole ausgegeben werden sollen.
+logger.addHandler(logging.StreamHandler())
+</code></pre>
+
+<p>Jetzt ertsellen wir den Decorator, z.B. in der Datei decorators.py.</p>
+
+<pre><code class="language-python">import logging
+
+# Einen default Logger festlegen, der verwendet wird, wenn
+# wenn beim Decorator kein Logger übergeben wurde.
+_logger = logging.getLogger(__name__)
+
+
+def log(level=logging.DEBUG, logger=None):
+    logger = logger or _logger
+
+    def inner(fnc):
+        def wrapper(*args, **kwargs):
+            logger.log(
+                level,
+                'calling method. name=%s; args=%s; kwargs=%s;',
+                fnc, args, kwargs
+            )
+            return_value = fnc(*args, **kwargs)
+            logger.log(
+                level,
+                'method called. name=%s; args=%s; kwargs=%s; return_value=%s',
+                fnc, args, kwargs, return_value
+            )
+            return return_value
+        return wrapper
+    return inner
+</code></pre>
+
+<p>Jetzt verwenden wir den Decorator. Hierfür erstellen wir zwei Methoden,
+denen wir die Parameter foo und bar übergeben. Zurückgegeben, wird ein
+Tuple dieser beiden Werte. Über die Methoden setzten wir unseren
+Decorator. Die Parameter des Decorators legen fest, in welchen Logger
+und mit welchem Level die Meldungen ausgegeben werden sollen.</p>
+
+<pre><code class="language-python">import decorators
+
+@decorators.log(logger=logger, level=logging.WARN)
+def log_warning(foo, bar):
+    return foo, bar
+
+
+@decorators.log(logger=logger, level=logging.DEBUG)
+def log_debug(foo, bar):
+    return foo, bar
+</code></pre>
+
+<p>Jetzt rufen wir die Funktion auf:</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; log_warning('foo', bar='bar')
+[WARNING] calling method. name=&lt;function log_warning at 0x2bf9320&gt;; args=('foo',); kwargs={'bar': 'bar'};
+[WARNING] method called. name=&lt;function log_warning at 0x2bf9320&gt;; args=('foo',); kwargs={'bar': 'bar'}; return_value=('foo', 'bar')
+
+&gt;&gt;&gt; log_debug('foo', bar='bar')
+[DEBUG] calling method. name=&lt;function log_warning at 0x2bf9320&gt;; args=('foo',); kwargs={'bar': 'bar'};
+[DEBUG] method called. name=&lt;function log_warning at 0x2bf9320&gt;; args=('foo',); kwargs={'bar': 'bar'}; return_value=('foo', 'bar')
+</code></pre>
+
+            <br>
+            <p><a href="/blog/">Zurück zur Übersicht</a></p>
+        </div>
+        <div class="disqus">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blawatt';
+    var disqus_identifier = '\/blog\/python-logging-decorator\/';
+    var disqus_title = 'Python Logging Decorator';
+    var disqus_url = '\/blog\/python-logging-decorator\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</section>
+
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js"></script>
+
+
+
+</body>
+</html>
+

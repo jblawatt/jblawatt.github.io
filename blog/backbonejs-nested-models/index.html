@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       Backbone.js - Nested Models 
+    
+  </title>
+  <link rel="canonical" href="/blog/backbonejs-nested-models/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-javascript.min.js">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-json.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        Backbone.js - Nested Models
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+        <div class="meta">
+            <span class="date" title="Sat Jan 4 2014 00:00:00 UTC">Jan 4, 2014</span>
+            
+        </div>
+        <div class="page-content">
+            <p>Die Abbildung von Backbone Models auf Basis einer REST Schnittstelle ist
+ja relativ einfach. Problematisch wurde es aber bei mir, als ich
+versuchte ein Model zu laden, dessen Attribute ebenfalls wieder Models
+bzw. eine Collection enthielten.</p>
+
+<p>LÃ¤sst man die Daten direkt von Backbone parsen, erhält man ein Attribut,
+welches ein einfaches JavaScript Objekt oder ein Array aus diesen
+enthält. Wie ich dieses Problem gelöst haben, möchte ich euch in einem
+kleinen Beispiel erklären.</p>
+
+<p><strong>Hier also zuerst die Ausgangslage:</strong></p>
+
+<p>Die REST Schnittstelle liefert unter der Adresss /api/data/ folgende
+Daten. Abgebildet werden zwei Personen. <em>Max Mustermann</em> hat zusätzlich
+noch zwei Kinder, die im Attribut children enthalten sind. <em>Theresa
+Test</em> hat keine Kinder.</p>
+
+<pre><code class="language-json">[
+  {
+    &quot;lastName&quot;: &quot;Mustermann&quot;,
+    &quot;id&quot;: 1,
+    &quot;firstName&quot;: &quot;Max&quot;,
+    &quot;children&quot;: [
+      {
+        &quot;lastName&quot;: &quot;Mustermann&quot;,
+        &quot;id&quot;: 2,
+        &quot;firstName&quot;: &quot;Malte&quot;
+      },
+      {
+        &quot;lastName&quot;: &quot;Mustermann&quot;,
+        &quot;id&quot;: 3,
+        &quot;firstName&quot;: &quot;Lena&quot;
+      }
+    ]
+  },
+  {
+    &quot;lastName&quot;: &quot;Test&quot;,
+    &quot;children&quot;: [],
+    &quot;id&quot;: 4,
+    &quot;fistName&quot;: &quot;Theresa&quot;
+  }
+]
+</code></pre>
+
+<p>Zu erst erstellen wir jetzt unser Backbone Model für die Person. An
+dieser Stelle reicht uns erstmal die Minimalversion:</p>
+
+<pre><code class="language-javascript">var Person = Backbone.Model.extend({});
+</code></pre>
+
+<p>Anschließend benötigen wir die Collection:</p>
+
+<pre><code class="language-javascript">var PersonCollection = Backbone.Collection.extend({
+    url: '/api/data/',
+    model: Person
+});
+</code></pre>
+
+<p>Erstellen wir jetzt eine neue PersonCollection funktioniert das Laden
+der Daten für&rsquo;s erste. Nur enthält das Attribut children keine
+PersonCollection, was aber unser Ziel ist:</p>
+
+<pre><code class="language-javascript">var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get('children'); // Das erste Objekt laden und das Attribut children ansehen.
+// &gt;&gt; [Object ]
+</code></pre>
+
+<p>Um dafür zu sorgen, dass in dem Attribut chidlren eine PersonCollection
+landet, müssen wir selbst dafür sorgen, dass die Informationen auch als
+solche erkannt und verarbeitet werden.</p>
+
+<p>Aus diesem Grund muss die Methode parse der Person überschieben werden.</p>
+
+<pre><code class="language-javascript">var Person = window.Person = Backbone.Model.extend({
+    parse: function (resp) {
+
+        // Hat der Response ein Attribute children.
+        if (resp['children']) {
+
+            // jeden Eintrag in children durchgehen und eine
+            // Person erstellen und das Objekt parsen lassen.
+            var children = _.map(resp['children'], function (child) {
+                return new Person(child, {parse: true});
+            });
+
+    // aus der Liste der Personen eine PersonCollection erstellen
+    // und dem Response zuweisen.
+            resp['children'] = new PersonCollection(children);
+        }
+
+    // den Ã¼berarbeiteten Resposen zurÃ¼ckgeben.
+        return resp;
+     }
+});
+</code></pre>
+
+<p>Mit dieser Erweiterung der Methode haben wir das gewünschte Ergebnis
+erziehlt:</p>
+
+<pre><code class="language-javascript">var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get('children'); // Das erste Objekt laden und das Attribut children ansehen.
+// &gt;&gt;  {length: 2, models: Array[2], _byId: Object, constructor: function, url: &quot;/api/data/&quot;â¦}
+</code></pre>
+
+            <br>
+            <p><a href="/blog/">Zurück zur Übersicht</a></p>
+        </div>
+        <div class="disqus">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blawatt';
+    var disqus_identifier = '\/blog\/backbonejs-nested-models\/';
+    var disqus_title = 'Backbone.js - Nested Models';
+    var disqus_url = '\/blog\/backbonejs-nested-models\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</section>
+
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-javascript.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-json.min.js"></script>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogs on Jens Blawatt.de</title>
+    <link>/blog/</link>
+    <description>Recent content in Blogs on Jens Blawatt.de</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>de-de</language>
+    <lastBuildDate>Fri, 07 Mar 2014 18:22:56 +0100</lastBuildDate>
+    <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Python Logging Decorator</title>
+      <link>/blog/python-logging-decorator/</link>
+      <pubDate>Fri, 07 Mar 2014 18:22:56 +0100</pubDate>
+      
+      <guid>/blog/python-logging-decorator/</guid>
+      <description>&lt;p&gt;Hin und wieder ist es notwendig, die Parameter und die Rückgabewerte
+einer Funktion zu überprüfen. In Python kann man hierfür das logging
+Paket und den später folgenden Decorator für die Funktionen verwenden.&lt;/p&gt;
+
+&lt;p&gt;Zuvor müssen wir aber erstmal dafür sorgen, dass die Informationen
+irgendwo ausgegeben werden. In diesem Fall auf der Konsole.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import logging
+
+# Einen Logger mit dem Namen foo.bar erstellen.
+logger = logging.getLogger(&#39;foo.bar&#39;)
+# Den Log-Level DEBUG setzten.
+logger.setLevel(logging.DEBUG)
+# Festlegen, dass die Meldungen auf der Konsole ausgegeben werden sollen.
+logger.addHandler(logging.StreamHandler())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt ertsellen wir den Decorator, z.B. in der Datei decorators.py.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import logging
+
+# Einen default Logger festlegen, der verwendet wird, wenn
+# wenn beim Decorator kein Logger übergeben wurde.
+_logger = logging.getLogger(__name__)
+
+
+def log(level=logging.DEBUG, logger=None):
+    logger = logger or _logger
+
+    def inner(fnc):
+        def wrapper(*args, **kwargs):
+            logger.log(
+                level,
+                &#39;calling method. name=%s; args=%s; kwargs=%s;&#39;,
+                fnc, args, kwargs
+            )
+            return_value = fnc(*args, **kwargs)
+            logger.log(
+                level,
+                &#39;method called. name=%s; args=%s; kwargs=%s; return_value=%s&#39;,
+                fnc, args, kwargs, return_value
+            )
+            return return_value
+        return wrapper
+    return inner
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt verwenden wir den Decorator. Hierfür erstellen wir zwei Methoden,
+denen wir die Parameter foo und bar übergeben. Zurückgegeben, wird ein
+Tuple dieser beiden Werte. Über die Methoden setzten wir unseren
+Decorator. Die Parameter des Decorators legen fest, in welchen Logger
+und mit welchem Level die Meldungen ausgegeben werden sollen.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import decorators
+
+@decorators.log(logger=logger, level=logging.WARN)
+def log_warning(foo, bar):
+    return foo, bar
+
+
+@decorators.log(logger=logger, level=logging.DEBUG)
+def log_debug(foo, bar):
+    return foo, bar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt rufen wir die Funktion auf:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; log_warning(&#39;foo&#39;, bar=&#39;bar&#39;)
+[WARNING] calling method. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;};
+[WARNING] method called. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;}; return_value=(&#39;foo&#39;, &#39;bar&#39;)
+
+&amp;gt;&amp;gt;&amp;gt; log_debug(&#39;foo&#39;, bar=&#39;bar&#39;)
+[DEBUG] calling method. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;};
+[DEBUG] method called. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;}; return_value=(&#39;foo&#39;, &#39;bar&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Backbone.js - Nested Models</title>
+      <link>/blog/backbonejs-nested-models/</link>
+      <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/backbonejs-nested-models/</guid>
+      <description>&lt;p&gt;Die Abbildung von Backbone Models auf Basis einer REST Schnittstelle ist
+ja relativ einfach. Problematisch wurde es aber bei mir, als ich
+versuchte ein Model zu laden, dessen Attribute ebenfalls wieder Models
+bzw. eine Collection enthielten.&lt;/p&gt;
+
+&lt;p&gt;LÃ¤sst man die Daten direkt von Backbone parsen, erhält man ein Attribut,
+welches ein einfaches JavaScript Objekt oder ein Array aus diesen
+enthält. Wie ich dieses Problem gelöst haben, möchte ich euch in einem
+kleinen Beispiel erklären.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hier also zuerst die Ausgangslage:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Die REST Schnittstelle liefert unter der Adresss /api/data/ folgende
+Daten. Abgebildet werden zwei Personen. &lt;em&gt;Max Mustermann&lt;/em&gt; hat zusätzlich
+noch zwei Kinder, die im Attribut children enthalten sind. &lt;em&gt;Theresa
+Test&lt;/em&gt; hat keine Kinder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;[
+  {
+    &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+    &amp;quot;id&amp;quot;: 1,
+    &amp;quot;firstName&amp;quot;: &amp;quot;Max&amp;quot;,
+    &amp;quot;children&amp;quot;: [
+      {
+        &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+        &amp;quot;id&amp;quot;: 2,
+        &amp;quot;firstName&amp;quot;: &amp;quot;Malte&amp;quot;
+      },
+      {
+        &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+        &amp;quot;id&amp;quot;: 3,
+        &amp;quot;firstName&amp;quot;: &amp;quot;Lena&amp;quot;
+      }
+    ]
+  },
+  {
+    &amp;quot;lastName&amp;quot;: &amp;quot;Test&amp;quot;,
+    &amp;quot;children&amp;quot;: [],
+    &amp;quot;id&amp;quot;: 4,
+    &amp;quot;fistName&amp;quot;: &amp;quot;Theresa&amp;quot;
+  }
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Zu erst erstellen wir jetzt unser Backbone Model für die Person. An
+dieser Stelle reicht uns erstmal die Minimalversion:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var Person = Backbone.Model.extend({});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Anschließend benötigen wir die Collection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var PersonCollection = Backbone.Collection.extend({
+    url: &#39;/api/data/&#39;,
+    model: Person
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Erstellen wir jetzt eine neue PersonCollection funktioniert das Laden
+der Daten für&amp;rsquo;s erste. Nur enthält das Attribut children keine
+PersonCollection, was aber unser Ziel ist:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get(&#39;children&#39;); // Das erste Objekt laden und das Attribut children ansehen.
+// &amp;gt;&amp;gt; [Object ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Um dafür zu sorgen, dass in dem Attribut chidlren eine PersonCollection
+landet, müssen wir selbst dafür sorgen, dass die Informationen auch als
+solche erkannt und verarbeitet werden.&lt;/p&gt;
+
+&lt;p&gt;Aus diesem Grund muss die Methode parse der Person überschieben werden.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var Person = window.Person = Backbone.Model.extend({
+    parse: function (resp) {
+
+        // Hat der Response ein Attribute children.
+        if (resp[&#39;children&#39;]) {
+
+            // jeden Eintrag in children durchgehen und eine
+            // Person erstellen und das Objekt parsen lassen.
+            var children = _.map(resp[&#39;children&#39;], function (child) {
+                return new Person(child, {parse: true});
+            });
+
+    // aus der Liste der Personen eine PersonCollection erstellen
+    // und dem Response zuweisen.
+            resp[&#39;children&#39;] = new PersonCollection(children);
+        }
+
+    // den Ã¼berarbeiteten Resposen zurÃ¼ckgeben.
+        return resp;
+     }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Mit dieser Erweiterung der Methode haben wir das gewünschte Ergebnis
+erziehlt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get(&#39;children&#39;); // Das erste Objekt laden und das Attribut children ansehen.
+// &amp;gt;&amp;gt;  {length: 2, models: Array[2], _byId: Object, constructor: function, url: &amp;quot;/api/data/&amp;quot;â¦}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>VIM als Python IDE</title>
+      <link>/blog/vim-as-python-ide/</link>
+      <pubDate>Thu, 17 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/vim-as-python-ide/</guid>
+      <description>
+
+&lt;p&gt;Es gibt einen Menge Anleitungen im Internet, wie man den Editor (G)Vim
+in eine Entwicklungsumgebung werwandeln kann. Jetzt möchte ich mich in
+die Liste der Authoren einreihen und meine Beschreibung und Erfahrungen
+hier dokumentieren.&lt;/p&gt;
+
+&lt;p&gt;Ich weiß, dass es viele dieser Anleitungen im Internet git. Ich selbst
+habe eine Menge davon gelesen. Doch ich muss sagen, dass Ich wirklich
+einige davon lesen musste, dass ich alles wusste, was ich für mein
+(g)vim Setup brauchte. Deshalb möchte ich an dieser Stelle gerne noch
+meine eigene Anleitung veröffentlichen. Für alle, die es interessiert
+und als Erinnerung für mich ;-).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/images/gvim-as-ide.png?width=800&amp;amp;height=800&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;vim-setup&#34;&gt;Vim Setup&lt;/h2&gt;
+
+&lt;p&gt;Ich gehe davon aus, dass (g)vim bereits auf dem System installiert ist.
+Ist dies nicht der Fall, kann er unter &lt;a href=&#34;http://www.vim.org&#34;&gt;vim.org&lt;/a&gt;
+heruntergeladen werden.&lt;/p&gt;
+
+&lt;p&gt;Ist (g)vim erfolgreich installiert, sollte es die Konfigurationsdatei
+.vimrc und den Ordner für die benutzerspezifische Konfiguration .vim im
+Home-Verzeichnis geben.&lt;/p&gt;
+
+&lt;h3 id=&#34;vimrc&#34;&gt;.vimrc&lt;/h3&gt;
+
+&lt;p&gt;In der .vimrc kann man einige Einstellungen festlegen, denen man sich
+die Arbeit mit vim erleichtern.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-vim&#34;&gt;    &amp;quot; Automatisches Neu-Laden des .vimrc nach dem Speichern
+    autocmd! bufwritepost .vimrc source %
+
+    &amp;quot; Mit F2 den Paste-Mode umschalten
+    set pastemode=&amp;lt;F2&amp;gt;
+
+    &amp;quot; aktivieren des syntaxhighlighting
+    if has(&#39;syntax&#39;)
+        syntax on
+    endif
+
+    &amp;quot; den leader key auf das , setzten
+    let mapleader=&amp;quot;,&amp;quot;
+
+    &amp;quot; shortcuts für das ein- und ausrücken von markierten
+    &amp;quot; textblöcken auf die größer und kleiner tasten mappen
+    vnoremap &amp;lt; &amp;lt;gv
+    vnoremap &amp;gt; &amp;gt;gv
+
+    &amp;quot; markieren von unnötigen Leerzeichen (in rot)
+    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+    au InsertLeave * match ExtraWhitespace /\s\+$/
+
+    &amp;quot; festlegen des Farbschematas
+    colors rdark
+
+    filetype plugin indent on
+
+    &amp;quot; Zeilennnummern anzeigen
+    set number
+
+    &amp;quot; die Breite des Dokuments auf 79 Zeichen setzten (z.B. für Python)
+    set tw=79
+
+    &amp;quot; kein automatischer Zeilenumbruch beim Anwendungsstart
+    set nowrap
+
+    &amp;quot; nicht automatisch umbrechen set fo-=t
+
+    &amp;quot; Erweiterungen für das Einrücken
+    set tabstop=4
+    set softtabstop=4
+    set shiftwidth=4
+    set shiftround
+    set expandtab
+
+    &amp;quot; Anpassungen für die Suche
+    set hlsearch
+    set incsearch
+    set ignorecase
+    set smartcase
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;plugins&#34;&gt;Plugins&lt;/h2&gt;
+
+&lt;p&gt;(g)vim ist ein sehr felxibler, modularer Editor, für den des eine Menge
+Erweiterungen gibt. Zu finden sind diese u.a. unter
+&lt;a href=&#34;http://www.vim.org&#34;&gt;vim.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Zwei Plugins, die ich von Anfang an verwendet habe, Pathogen und
+Powerline, möchte ich an dieser Stelle kurz vorstellen. Demnächst folgen
+dann noch weitere Reviews.&lt;/p&gt;
+
+&lt;h3 id=&#34;pathogen&#34;&gt;Pathogen&lt;/h3&gt;
+
+&lt;p&gt;Pathogen ist eine Plugin, mit dem es nicht mehr erforderlich ist die
+einzelnen Plugins, die man so installierne möchte, auf die vielen
+unterschiedlichen Ordner in .vim aufzuteilen. Dies ist besonders
+wichtig, wenn man ein Plugin wieder deinstallieren möchte.&lt;/p&gt;
+
+&lt;p&gt;Mit Pathogen erstellt man einen Ordner (autoload / bundle) in dem
+ordnersepariert die einzelnen Plugins abgelegt werden. Anschließend
+werden dann beim Start von vim die Plugins automatisch geladen.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;    $ mkdir -p ~/.vim/autoload ~/.vim/bundle
+    $ curl -so ~/.vim/autoload/pathogen.vim https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nun muss man das Plugin in der .vimrc aktivieren.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-vim&#34;&gt;    call pathogen#infect()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ab jetzt kann jedes Plugin einfach nach ~/.vim/bundle/PLUGIN_NAME/
+entpackt werden.&lt;/p&gt;
+
+&lt;h3 id=&#34;powerline&#34;&gt;powerline&lt;/h3&gt;
+
+&lt;p&gt;Die Powerline ist eine Erweiterung, die zusätzliche Informationen zur
+geöffneten Datei, dem Ornder, dem DVCS Branch, usw. anzeigt.&lt;/p&gt;
+
+&lt;p&gt;So sieht das Ergebnis dann aus:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-normal.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-insert.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-replace.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-visual.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Quelle: &lt;a href=&#34;https://github.com/Lokaltog/powerline&#34;&gt;https://github.com/Lokaltog/powerline&lt;/a&gt;)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Die alte vim-powerline ist obsolete. Die neue ist aktuell noch in der
+Beta-Phase. Funktioniert aber in meinen ersten Tests gut.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;    $ cd ~/.vim/bunde/
+    $ git clone https://github.com/Lokaltog/powerline.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt muss die Powerline noch in der .vimrc aktiviert werden.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-vim&#34;&gt;    autocmd VimEnter,Colorscheme * :source ~/.vim/bundle/powerline/powerline/ext/vim/source_plugin.vim
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Das wars schon. ;-)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Python Namespaces</title>
+      <link>/blog/python-namespaces/</link>
+      <pubDate>Sat, 12 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/python-namespaces/</guid>
+      <description>&lt;p&gt;In Programmiersprachen wie Java oder C# ist es möglich, Namespaces zu
+nutzen um sein Programm zu struckturieren. In Python nutzt man hierfür
+Packages. Auf den ersten Blick gibt es jedoch in Python keine
+Möglichkeit die einzelnen Packete in mehrere Eggs aufzuteilen und damit
+aussehen zu lassen als wären Sie eins. Dies dient meines Erachtens auch
+der Übersichtlichtkeit des Programms/Frameworks.&lt;/p&gt;
+
+&lt;p&gt;Da ich aus der C#/VB.NET Ecke komme, habe ich ich dieses Feature ein
+wenig vermisst.&lt;/p&gt;
+
+&lt;p&gt;Jetzt bin ich auf eine Möglichkeit gestoßen, dieses Feature auf in
+Python zu nutzen. Hierfür muss man in jeder __init__.py jedes
+Packetes folgenden Codeschnipsel einfügen.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	try:
+	    __import__(&#39;pkg_resources&#39;).declare_namespace(__name__)
+	except ImportError:
+	    from pkgutil import extend_path
+	    __path__ = extend_path(__path__, __name__)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Als Beispiel habe ich jetzt zwei Packete: &lt;em&gt;one&lt;/em&gt; und &lt;em&gt;two&lt;/em&gt;. Beide
+enthalten die gleiche Strucktur, aber ein anderes Modul am Ende des
+Pfades.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;/one/foo/bar/foobar.py&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	def my_method():
+	    print &amp;quot;Hello From FooBar&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;/two/foo/bar/barfoo.py&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	def my_method():
+    	print &amp;quot;Hello From BarFoo&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sorgt man jetzt dafür, dass beide Pfade im PYTHONPATH liegen, kann man
+diese so aufrufen, als wenn sie ein Packet wären.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	import sys
+	
+	sys.path.append(&#39;./one/&#39;)
+	sys.path.append(&#39;./two/&#39;)
+	
+	from foo.bar import foobar, barfoo
+	
+	foobar.my_method()
+	barfoo.my_method()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Den Quellcode zu diesem Beispiel habe ich auf Bitbucket veröffentlicht:
+&lt;a href=&#34;http://bitbucket.org/jblawatt/python-namespace-example&#34;&gt;http://bitbucket.org/jblawatt/python-namespace-example&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MySQL Equivalent zu ORACLE&#39;s initcap</title>
+      <link>/blog/mysql-oracle-initcap-equivalent/</link>
+      <pubDate>Fri, 11 Apr 2008 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/mysql-oracle-initcap-equivalent/</guid>
+      <description>&lt;p&gt;Die Funktion &lt;strong&gt;initcap&lt;/strong&gt; des &lt;em&gt;DBMS ORACLE&lt;/em&gt; verwandelt jedes erste
+Zeichen eines Wortes in einem übergebenen String in ein Großbuchstaben,
+der Rest wird klein geschrieben.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Beispiel:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;    select initcap(&#39;jens blawatt&#39;) from dual;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Ergebnis:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;    Jens Blawatt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Diese Funktion gibt es leider in MySQL nicht. Es ist jedoch möglich
+eigene Funktionen zu schreiben. Hier ist also meine MySQL initcap
+Version (unter dem Quellcode gibt es die Downloadmöglichkeit):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;    DELIMITER $$
+    
+    DROP FUNCTION IF EXISTS initcap$$
+    
+    CREATE FUNCTION initcap( param VARCHAR(255) )
+        RETURNS VARCHAR(255)
+        /*
+        * Author : Jens Blawatt
+        * Website : http://www.Blawatt.de
+        * Description : A MySQL equivalent to ORACLE&#39;s initcap
+        */
+        BEGIN
+            DECLARE result VARCHAR(255) default &#39;&#39;;
+            DECLARE tmp VARCHAR(255) default &#39;&#39;;
+    
+            -- endless repeat
+            WHILE  1 = 1 DO
+                -- if it&#39;s the end of the blank spearated string
+                IF INSTR(TRIM(param) , &#39; &#39;) = 0 THEN
+                    return trim(concat(result, UCASE(LEFT(param,1)),LOWER(SUBSTR(param,2))));
+                END IF;
+        
+                -- split the first part to tmp
+                SET tmp = SUBSTR(param, 1, INSTR(param , &#39; &#39;));
+    
+                -- write first character in capital letter rest in small type
+                SET result = CONCAT(result, UCASE(LEFT(tmp,1)),LOWER(SUBSTR(tmp,2)));
+    
+                -- remove splitted word from param string
+                SET param = SUBSTR(param, INSTR(param , &#39; &#39;) + 1);
+            END WHILE;
+        END$$
+    
+    DELIMITER ;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

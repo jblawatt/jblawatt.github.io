@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       VIM als Python IDE 
+    
+  </title>
+  <link rel="canonical" href="/blog/vim-as-python-ide/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-vim.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        VIM als Python IDE
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+        <div class="meta">
+            <span class="date" title="Thu Jan 17 2013 00:00:00 UTC">Jan 17, 2013</span>
+            
+        </div>
+        <div class="page-content">
+            
+
+<p>Es gibt einen Menge Anleitungen im Internet, wie man den Editor (G)Vim
+in eine Entwicklungsumgebung werwandeln kann. Jetzt möchte ich mich in
+die Liste der Authoren einreihen und meine Beschreibung und Erfahrungen
+hier dokumentieren.</p>
+
+<p>Ich weiß, dass es viele dieser Anleitungen im Internet git. Ich selbst
+habe eine Menge davon gelesen. Doch ich muss sagen, dass Ich wirklich
+einige davon lesen musste, dass ich alles wusste, was ich für mein
+(g)vim Setup brauchte. Deshalb möchte ich an dieser Stelle gerne noch
+meine eigene Anleitung veröffentlichen. Für alle, die es interessiert
+und als Erinnerung für mich ;-).</p>
+
+<p><img src="/images/gvim-as-ide.png?width=800&amp;height=800" alt="image" /></p>
+
+<h2 id="vim-setup">Vim Setup</h2>
+
+<p>Ich gehe davon aus, dass (g)vim bereits auf dem System installiert ist.
+Ist dies nicht der Fall, kann er unter <a href="http://www.vim.org">vim.org</a>
+heruntergeladen werden.</p>
+
+<p>Ist (g)vim erfolgreich installiert, sollte es die Konfigurationsdatei
+.vimrc und den Ordner für die benutzerspezifische Konfiguration .vim im
+Home-Verzeichnis geben.</p>
+
+<h3 id="vimrc">.vimrc</h3>
+
+<p>In der .vimrc kann man einige Einstellungen festlegen, denen man sich
+die Arbeit mit vim erleichtern.</p>
+
+<pre><code class="language-vim">    &quot; Automatisches Neu-Laden des .vimrc nach dem Speichern
+    autocmd! bufwritepost .vimrc source %
+
+    &quot; Mit F2 den Paste-Mode umschalten
+    set pastemode=&lt;F2&gt;
+
+    &quot; aktivieren des syntaxhighlighting
+    if has('syntax')
+        syntax on
+    endif
+
+    &quot; den leader key auf das , setzten
+    let mapleader=&quot;,&quot;
+
+    &quot; shortcuts für das ein- und ausrücken von markierten
+    &quot; textblöcken auf die größer und kleiner tasten mappen
+    vnoremap &lt; &lt;gv
+    vnoremap &gt; &gt;gv
+
+    &quot; markieren von unnötigen Leerzeichen (in rot)
+    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+    au InsertLeave * match ExtraWhitespace /\s\+$/
+
+    &quot; festlegen des Farbschematas
+    colors rdark
+
+    filetype plugin indent on
+
+    &quot; Zeilennnummern anzeigen
+    set number
+
+    &quot; die Breite des Dokuments auf 79 Zeichen setzten (z.B. für Python)
+    set tw=79
+
+    &quot; kein automatischer Zeilenumbruch beim Anwendungsstart
+    set nowrap
+
+    &quot; nicht automatisch umbrechen set fo-=t
+
+    &quot; Erweiterungen für das Einrücken
+    set tabstop=4
+    set softtabstop=4
+    set shiftwidth=4
+    set shiftround
+    set expandtab
+
+    &quot; Anpassungen für die Suche
+    set hlsearch
+    set incsearch
+    set ignorecase
+    set smartcase
+
+</code></pre>
+
+<h2 id="plugins">Plugins</h2>
+
+<p>(g)vim ist ein sehr felxibler, modularer Editor, für den des eine Menge
+Erweiterungen gibt. Zu finden sind diese u.a. unter
+<a href="http://www.vim.org">vim.org</a>.</p>
+
+<p>Zwei Plugins, die ich von Anfang an verwendet habe, Pathogen und
+Powerline, möchte ich an dieser Stelle kurz vorstellen. Demnächst folgen
+dann noch weitere Reviews.</p>
+
+<h3 id="pathogen">Pathogen</h3>
+
+<p>Pathogen ist eine Plugin, mit dem es nicht mehr erforderlich ist die
+einzelnen Plugins, die man so installierne möchte, auf die vielen
+unterschiedlichen Ordner in .vim aufzuteilen. Dies ist besonders
+wichtig, wenn man ein Plugin wieder deinstallieren möchte.</p>
+
+<p>Mit Pathogen erstellt man einen Ordner (autoload / bundle) in dem
+ordnersepariert die einzelnen Plugins abgelegt werden. Anschließend
+werden dann beim Start von vim die Plugins automatisch geladen.</p>
+
+<pre><code class="language-bash">    $ mkdir -p ~/.vim/autoload ~/.vim/bundle
+    $ curl -so ~/.vim/autoload/pathogen.vim https://raw.github.com/tpope/vim-pathogen/HEAD/autoload/pathogen.vim 
+</code></pre>
+
+<p>Nun muss man das Plugin in der .vimrc aktivieren.</p>
+
+<pre><code class="language-vim">    call pathogen#infect()
+</code></pre>
+
+<p>Ab jetzt kann jedes Plugin einfach nach ~/.vim/bundle/PLUGIN_NAME/
+entpackt werden.</p>
+
+<h3 id="powerline">powerline</h3>
+
+<p>Die Powerline ist eine Erweiterung, die zusätzliche Informationen zur
+geöffneten Datei, dem Ornder, dem DVCS Branch, usw. anzeigt.</p>
+
+<p>So sieht das Ergebnis dann aus:</p>
+
+<p><img src="https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-normal.png" alt="image" /></p>
+
+<p><img src="https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-insert.png" alt="image" /></p>
+
+<p><img src="https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-replace.png" alt="image" /></p>
+
+<p><img src="https://raw.github.com/Lokaltog/powerline/develop/docs/source/_static/img/pl-mode-visual.png" alt="image" /></p>
+
+<p><em>(Quelle: <a href="https://github.com/Lokaltog/powerline">https://github.com/Lokaltog/powerline</a>)</em></p>
+
+<p>Die alte vim-powerline ist obsolete. Die neue ist aktuell noch in der
+Beta-Phase. Funktioniert aber in meinen ersten Tests gut.</p>
+
+<pre><code class="language-bash">    $ cd ~/.vim/bunde/
+    $ git clone https://github.com/Lokaltog/powerline.git
+</code></pre>
+
+<p>Jetzt muss die Powerline noch in der .vimrc aktiviert werden.</p>
+
+<pre><code class="language-vim">    autocmd VimEnter,Colorscheme * :source ~/.vim/bundle/powerline/powerline/ext/vim/source_plugin.vim
+</code></pre>
+
+<p>Das wars schon. ;-)</p>
+
+            <br>
+            <p><a href="/blog/">Zurück zur Übersicht</a></p>
+        </div>
+        <div class="disqus">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blawatt';
+    var disqus_identifier = '\/blog\/vim-as-python-ide\/';
+    var disqus_title = 'VIM als Python IDE';
+    var disqus_url = '\/blog\/vim-as-python-ide\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</section>
+
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-vim.min.js"></script>
+
+
+
+</body>
+</html>
+

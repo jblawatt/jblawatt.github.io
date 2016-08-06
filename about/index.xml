@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Abouts on Jens Blawatt.de</title>
+    <link>/about/</link>
+    <description>Recent content in Abouts on Jens Blawatt.de</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>de-de</language>
+    <lastBuildDate>Sun, 01 Apr 2012 18:38:30 +0100</lastBuildDate>
+    <atom:link href="/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>GWS Gesellschaft für Warenwirtschafts-Systeme mbH</title>
+      <link>/about/042012-now-gws/</link>
+      <pubDate>Sun, 01 Apr 2012 18:38:30 +0100</pubDate>
+      
+      <guid>/about/042012-now-gws/</guid>
+      <description>&lt;p&gt;Currently i work for the &lt;a href=&#34;http://www.gws.ms&#34;&gt;GWSmbH&lt;/a&gt; im Münster, Germany.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;label&#34;&gt;Python&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;JavaScript&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;PostgreSQL&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Django&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Marionette&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Backbone&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;jQuery&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Software Architecture&lt;/span&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IT Project Manager</title>
+      <link>/about/082016-now-itsystemsmanager/</link>
+      <pubDate>Sun, 01 Apr 2012 18:38:30 +0100</pubDate>
+      
+      <guid>/about/082016-now-itsystemsmanager/</guid>
+      <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stadt Münster - citeq</title>
+      <link>/about/072008-032012-citeq/</link>
+      <pubDate>Sun, 01 Jul 2007 18:38:30 +0100</pubDate>
+      
+      <guid>/about/072008-032012-citeq/</guid>
+      <description>&lt;p&gt;After i finished my eductation i continued working for the citeq. While i continued to develop .NET Client/Server applications, extending the facility management tool &lt;a href=&#34;http://www.imsware.de&#34;&gt;IMSware&lt;/a&gt; was the main part of my job.&lt;/p&gt;
+
+&lt;p&gt;I developed and maintained a module for facility maintainance and overhauling for the department of facility management at the manucipal on Münster.&lt;/p&gt;
+
+&lt;p&gt;Another big project was the planing and development of the so called &amp;ldquo;Bürgerhaushalt&amp;rdquo;. An instrument of citizien participation regarding the budget of the city of Münster. The solution was based on &lt;a href=&#34;http://typo3.org&#34;&gt;typo3&lt;/a&gt;, written in &lt;a href=&#34;http://www.php.net&#34;&gt;PHP&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;label&#34;&gt;.NET&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Oracle&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;PHP&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Typo3&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;MySQL&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;MediaWiki&lt;/span&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Stadt Münster - citeq</title>
+      <link>/about/082005-062008-citeq/</link>
+      <pubDate>Mon, 01 Aug 2005 18:38:30 +0100</pubDate>
+      
+      <guid>/about/082005-062008-citeq/</guid>
+      <description>&lt;p&gt;I did my edication at &lt;a href=&#34;http://www.citeq.de/&#34;&gt;Stadt Münster - citeq&lt;/a&gt; for &lt;em&gt;IT Specialist for Software Development&lt;/em&gt;. Creating .NET based Client/Server applications and Oracle Database Development was my key business there.&lt;/p&gt;
+
+&lt;p&gt;Additionaly i cared about multiple &lt;a href=&#34;http://www.mediawiki.org/&#34;&gt;MediaWiki&lt;/a&gt; instances, which ic could establish as the central documentation platform there. Writing some special extensions was my job, too.&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;label&#34;&gt;.NET&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;Oracle&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;PHP&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;MySQL&lt;/span&gt;
+&lt;span class=&#34;label&#34;&gt;MediaWiki&lt;/span&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

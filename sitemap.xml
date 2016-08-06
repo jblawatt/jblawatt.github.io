@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2016-06-30T14:52:15+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/impressum/</loc>
+    <lastmod>2016-06-30T14:52:15+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/test/</loc>
+    <lastmod>2016-06-30T14:52:15+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/code/hugo-skeleton-theme/</loc>
+    <lastmod>2016-04-11T19:15:48+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/page/impressum/</loc>
+    <lastmod>2016-04-11T19:15:48+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/code/python-simple-di/</loc>
+    <lastmod>2016-04-11T19:15:48+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about___/</loc>
+    <lastmod>2016-03-16T18:38:30+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/python-logging-decorator/</loc>
+    <lastmod>2014-03-07T18:22:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/backbonejs-nested-models/</loc>
+    <lastmod>2014-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/vim-as-python-ide/</loc>
+    <lastmod>2013-01-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/python-namespaces/</loc>
+    <lastmod>2013-01-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/042012-now-gws/</loc>
+    <lastmod>2012-04-01T18:38:30+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/082016-now-itsystemsmanager/</loc>
+    <lastmod>2012-04-01T18:38:30+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/mysql-oracle-initcap-equivalent/</loc>
+    <lastmod>2008-04-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/072008-032012-citeq/</loc>
+    <lastmod>2007-07-01T18:38:30+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/082005-062008-citeq/</loc>
+    <lastmod>2005-08-01T18:38:30+01:00</lastmod>
+  </url>
+  
+</urlset>

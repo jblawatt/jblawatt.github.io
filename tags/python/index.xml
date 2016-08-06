@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on Jens Blawatt.de</title>
+    <link>/tags/python/</link>
+    <description>Recent content in Python on Jens Blawatt.de</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>de-de</language>
+    <lastBuildDate>Fri, 07 Mar 2014 18:22:56 +0100</lastBuildDate>
+    <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Python Logging Decorator</title>
+      <link>/blog/python-logging-decorator/</link>
+      <pubDate>Fri, 07 Mar 2014 18:22:56 +0100</pubDate>
+      
+      <guid>/blog/python-logging-decorator/</guid>
+      <description>&lt;p&gt;Hin und wieder ist es notwendig, die Parameter und die Rückgabewerte
+einer Funktion zu überprüfen. In Python kann man hierfür das logging
+Paket und den später folgenden Decorator für die Funktionen verwenden.&lt;/p&gt;
+
+&lt;p&gt;Zuvor müssen wir aber erstmal dafür sorgen, dass die Informationen
+irgendwo ausgegeben werden. In diesem Fall auf der Konsole.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import logging
+
+# Einen Logger mit dem Namen foo.bar erstellen.
+logger = logging.getLogger(&#39;foo.bar&#39;)
+# Den Log-Level DEBUG setzten.
+logger.setLevel(logging.DEBUG)
+# Festlegen, dass die Meldungen auf der Konsole ausgegeben werden sollen.
+logger.addHandler(logging.StreamHandler())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt ertsellen wir den Decorator, z.B. in der Datei decorators.py.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import logging
+
+# Einen default Logger festlegen, der verwendet wird, wenn
+# wenn beim Decorator kein Logger übergeben wurde.
+_logger = logging.getLogger(__name__)
+
+
+def log(level=logging.DEBUG, logger=None):
+    logger = logger or _logger
+
+    def inner(fnc):
+        def wrapper(*args, **kwargs):
+            logger.log(
+                level,
+                &#39;calling method. name=%s; args=%s; kwargs=%s;&#39;,
+                fnc, args, kwargs
+            )
+            return_value = fnc(*args, **kwargs)
+            logger.log(
+                level,
+                &#39;method called. name=%s; args=%s; kwargs=%s; return_value=%s&#39;,
+                fnc, args, kwargs, return_value
+            )
+            return return_value
+        return wrapper
+    return inner
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt verwenden wir den Decorator. Hierfür erstellen wir zwei Methoden,
+denen wir die Parameter foo und bar übergeben. Zurückgegeben, wird ein
+Tuple dieser beiden Werte. Über die Methoden setzten wir unseren
+Decorator. Die Parameter des Decorators legen fest, in welchen Logger
+und mit welchem Level die Meldungen ausgegeben werden sollen.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import decorators
+
+@decorators.log(logger=logger, level=logging.WARN)
+def log_warning(foo, bar):
+    return foo, bar
+
+
+@decorators.log(logger=logger, level=logging.DEBUG)
+def log_debug(foo, bar):
+    return foo, bar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Jetzt rufen wir die Funktion auf:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;&amp;gt;&amp;gt;&amp;gt; log_warning(&#39;foo&#39;, bar=&#39;bar&#39;)
+[WARNING] calling method. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;};
+[WARNING] method called. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;}; return_value=(&#39;foo&#39;, &#39;bar&#39;)
+
+&amp;gt;&amp;gt;&amp;gt; log_debug(&#39;foo&#39;, bar=&#39;bar&#39;)
+[DEBUG] calling method. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;};
+[DEBUG] method called. name=&amp;lt;function log_warning at 0x2bf9320&amp;gt;; args=(&#39;foo&#39;,); kwargs={&#39;bar&#39;: &#39;bar&#39;}; return_value=(&#39;foo&#39;, &#39;bar&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Python Namespaces</title>
+      <link>/blog/python-namespaces/</link>
+      <pubDate>Sat, 12 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/python-namespaces/</guid>
+      <description>&lt;p&gt;In Programmiersprachen wie Java oder C# ist es möglich, Namespaces zu
+nutzen um sein Programm zu struckturieren. In Python nutzt man hierfür
+Packages. Auf den ersten Blick gibt es jedoch in Python keine
+Möglichkeit die einzelnen Packete in mehrere Eggs aufzuteilen und damit
+aussehen zu lassen als wären Sie eins. Dies dient meines Erachtens auch
+der Übersichtlichtkeit des Programms/Frameworks.&lt;/p&gt;
+
+&lt;p&gt;Da ich aus der C#/VB.NET Ecke komme, habe ich ich dieses Feature ein
+wenig vermisst.&lt;/p&gt;
+
+&lt;p&gt;Jetzt bin ich auf eine Möglichkeit gestoßen, dieses Feature auf in
+Python zu nutzen. Hierfür muss man in jeder __init__.py jedes
+Packetes folgenden Codeschnipsel einfügen.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	try:
+	    __import__(&#39;pkg_resources&#39;).declare_namespace(__name__)
+	except ImportError:
+	    from pkgutil import extend_path
+	    __path__ = extend_path(__path__, __name__)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Als Beispiel habe ich jetzt zwei Packete: &lt;em&gt;one&lt;/em&gt; und &lt;em&gt;two&lt;/em&gt;. Beide
+enthalten die gleiche Strucktur, aber ein anderes Modul am Ende des
+Pfades.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;/one/foo/bar/foobar.py&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	def my_method():
+	    print &amp;quot;Hello From FooBar&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;/two/foo/bar/barfoo.py&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	def my_method():
+    	print &amp;quot;Hello From BarFoo&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sorgt man jetzt dafür, dass beide Pfade im PYTHONPATH liegen, kann man
+diese so aufrufen, als wenn sie ein Packet wären.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;	import sys
+	
+	sys.path.append(&#39;./one/&#39;)
+	sys.path.append(&#39;./two/&#39;)
+	
+	from foo.bar import foobar, barfoo
+	
+	foobar.my_method()
+	barfoo.my_method()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Den Quellcode zu diesem Beispiel habe ich auf Bitbucket veröffentlicht:
+&lt;a href=&#34;http://bitbucket.org/jblawatt/python-namespace-example&#34;&gt;http://bitbucket.org/jblawatt/python-namespace-example&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

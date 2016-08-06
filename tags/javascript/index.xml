@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Javascript on Jens Blawatt.de</title>
+    <link>/tags/javascript/</link>
+    <description>Recent content in Javascript on Jens Blawatt.de</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>de-de</language>
+    <lastBuildDate>Sat, 04 Jan 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Backbone.js - Nested Models</title>
+      <link>/blog/backbonejs-nested-models/</link>
+      <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/backbonejs-nested-models/</guid>
+      <description>&lt;p&gt;Die Abbildung von Backbone Models auf Basis einer REST Schnittstelle ist
+ja relativ einfach. Problematisch wurde es aber bei mir, als ich
+versuchte ein Model zu laden, dessen Attribute ebenfalls wieder Models
+bzw. eine Collection enthielten.&lt;/p&gt;
+
+&lt;p&gt;LÃ¤sst man die Daten direkt von Backbone parsen, erhält man ein Attribut,
+welches ein einfaches JavaScript Objekt oder ein Array aus diesen
+enthält. Wie ich dieses Problem gelöst haben, möchte ich euch in einem
+kleinen Beispiel erklären.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hier also zuerst die Ausgangslage:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Die REST Schnittstelle liefert unter der Adresss /api/data/ folgende
+Daten. Abgebildet werden zwei Personen. &lt;em&gt;Max Mustermann&lt;/em&gt; hat zusätzlich
+noch zwei Kinder, die im Attribut children enthalten sind. &lt;em&gt;Theresa
+Test&lt;/em&gt; hat keine Kinder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;[
+  {
+    &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+    &amp;quot;id&amp;quot;: 1,
+    &amp;quot;firstName&amp;quot;: &amp;quot;Max&amp;quot;,
+    &amp;quot;children&amp;quot;: [
+      {
+        &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+        &amp;quot;id&amp;quot;: 2,
+        &amp;quot;firstName&amp;quot;: &amp;quot;Malte&amp;quot;
+      },
+      {
+        &amp;quot;lastName&amp;quot;: &amp;quot;Mustermann&amp;quot;,
+        &amp;quot;id&amp;quot;: 3,
+        &amp;quot;firstName&amp;quot;: &amp;quot;Lena&amp;quot;
+      }
+    ]
+  },
+  {
+    &amp;quot;lastName&amp;quot;: &amp;quot;Test&amp;quot;,
+    &amp;quot;children&amp;quot;: [],
+    &amp;quot;id&amp;quot;: 4,
+    &amp;quot;fistName&amp;quot;: &amp;quot;Theresa&amp;quot;
+  }
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Zu erst erstellen wir jetzt unser Backbone Model für die Person. An
+dieser Stelle reicht uns erstmal die Minimalversion:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var Person = Backbone.Model.extend({});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Anschließend benötigen wir die Collection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var PersonCollection = Backbone.Collection.extend({
+    url: &#39;/api/data/&#39;,
+    model: Person
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Erstellen wir jetzt eine neue PersonCollection funktioniert das Laden
+der Daten für&amp;rsquo;s erste. Nur enthält das Attribut children keine
+PersonCollection, was aber unser Ziel ist:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get(&#39;children&#39;); // Das erste Objekt laden und das Attribut children ansehen.
+// &amp;gt;&amp;gt; [Object ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Um dafür zu sorgen, dass in dem Attribut chidlren eine PersonCollection
+landet, müssen wir selbst dafür sorgen, dass die Informationen auch als
+solche erkannt und verarbeitet werden.&lt;/p&gt;
+
+&lt;p&gt;Aus diesem Grund muss die Methode parse der Person überschieben werden.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var Person = window.Person = Backbone.Model.extend({
+    parse: function (resp) {
+
+        // Hat der Response ein Attribute children.
+        if (resp[&#39;children&#39;]) {
+
+            // jeden Eintrag in children durchgehen und eine
+            // Person erstellen und das Objekt parsen lassen.
+            var children = _.map(resp[&#39;children&#39;], function (child) {
+                return new Person(child, {parse: true});
+            });
+
+    // aus der Liste der Personen eine PersonCollection erstellen
+    // und dem Response zuweisen.
+            resp[&#39;children&#39;] = new PersonCollection(children);
+        }
+
+    // den Ã¼berarbeiteten Resposen zurÃ¼ckgeben.
+        return resp;
+     }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Mit dieser Erweiterung der Methode haben wir das gewünschte Ergebnis
+erziehlt:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var pc = new PersonCollection();
+pc.fetch();
+
+pc.at(0).get(&#39;children&#39;); // Das erste Objekt laden und das Attribut children ansehen.
+// &amp;gt;&amp;gt;  {length: 2, models: Array[2], _byId: Object, constructor: function, url: &amp;quot;/api/data/&amp;quot;â¦}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

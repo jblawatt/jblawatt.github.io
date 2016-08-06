@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mysql on Jens Blawatt.de</title>
+    <link>/tags/mysql/</link>
+    <description>Recent content in Mysql on Jens Blawatt.de</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>de-de</language>
+    <lastBuildDate>Fri, 11 Apr 2008 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>MySQL Equivalent zu ORACLE&#39;s initcap</title>
+      <link>/blog/mysql-oracle-initcap-equivalent/</link>
+      <pubDate>Fri, 11 Apr 2008 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/mysql-oracle-initcap-equivalent/</guid>
+      <description>&lt;p&gt;Die Funktion &lt;strong&gt;initcap&lt;/strong&gt; des &lt;em&gt;DBMS ORACLE&lt;/em&gt; verwandelt jedes erste
+Zeichen eines Wortes in einem übergebenen String in ein Großbuchstaben,
+der Rest wird klein geschrieben.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Beispiel:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;    select initcap(&#39;jens blawatt&#39;) from dual;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Ergebnis:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;    Jens Blawatt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Diese Funktion gibt es leider in MySQL nicht. Es ist jedoch möglich
+eigene Funktionen zu schreiben. Hier ist also meine MySQL initcap
+Version (unter dem Quellcode gibt es die Downloadmöglichkeit):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;    DELIMITER $$
+    
+    DROP FUNCTION IF EXISTS initcap$$
+    
+    CREATE FUNCTION initcap( param VARCHAR(255) )
+        RETURNS VARCHAR(255)
+        /*
+        * Author : Jens Blawatt
+        * Website : http://www.Blawatt.de
+        * Description : A MySQL equivalent to ORACLE&#39;s initcap
+        */
+        BEGIN
+            DECLARE result VARCHAR(255) default &#39;&#39;;
+            DECLARE tmp VARCHAR(255) default &#39;&#39;;
+    
+            -- endless repeat
+            WHILE  1 = 1 DO
+                -- if it&#39;s the end of the blank spearated string
+                IF INSTR(TRIM(param) , &#39; &#39;) = 0 THEN
+                    return trim(concat(result, UCASE(LEFT(param,1)),LOWER(SUBSTR(param,2))));
+                END IF;
+        
+                -- split the first part to tmp
+                SET tmp = SUBSTR(param, 1, INSTR(param , &#39; &#39;));
+    
+                -- write first character in capital letter rest in small type
+                SET result = CONCAT(result, UCASE(LEFT(tmp,1)),LOWER(SUBSTR(tmp,2)));
+    
+                -- remove splitted word from param string
+                SET param = SUBSTR(param, INSTR(param , &#39; &#39;) + 1);
+            END WHILE;
+        END$$
+    
+    DELIMITER ;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

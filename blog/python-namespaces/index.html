@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       Python Namespaces 
+    
+  </title>
+  <link rel="canonical" href="/blog/python-namespaces/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        Python Namespaces
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+        <div class="meta">
+            <span class="date" title="Sat Jan 12 2013 00:00:00 UTC">Jan 12, 2013</span>
+            
+        </div>
+        <div class="page-content">
+            <p>In Programmiersprachen wie Java oder C# ist es möglich, Namespaces zu
+nutzen um sein Programm zu struckturieren. In Python nutzt man hierfür
+Packages. Auf den ersten Blick gibt es jedoch in Python keine
+Möglichkeit die einzelnen Packete in mehrere Eggs aufzuteilen und damit
+aussehen zu lassen als wären Sie eins. Dies dient meines Erachtens auch
+der Übersichtlichtkeit des Programms/Frameworks.</p>
+
+<p>Da ich aus der C#/VB.NET Ecke komme, habe ich ich dieses Feature ein
+wenig vermisst.</p>
+
+<p>Jetzt bin ich auf eine Möglichkeit gestoßen, dieses Feature auf in
+Python zu nutzen. Hierfür muss man in jeder __init__.py jedes
+Packetes folgenden Codeschnipsel einfügen.</p>
+
+<pre><code class="language-python">	try:
+	    __import__('pkg_resources').declare_namespace(__name__)
+	except ImportError:
+	    from pkgutil import extend_path
+	    __path__ = extend_path(__path__, __name__)
+</code></pre>
+
+<p>Als Beispiel habe ich jetzt zwei Packete: <em>one</em> und <em>two</em>. Beide
+enthalten die gleiche Strucktur, aber ein anderes Modul am Ende des
+Pfades.</p>
+
+<p><strong>/one/foo/bar/foobar.py</strong></p>
+
+<pre><code class="language-python">	def my_method():
+	    print &quot;Hello From FooBar&quot;
+</code></pre>
+
+<p><strong>/two/foo/bar/barfoo.py</strong></p>
+
+<pre><code class="language-python">	def my_method():
+    	print &quot;Hello From BarFoo&quot;
+</code></pre>
+
+<p>Sorgt man jetzt dafür, dass beide Pfade im PYTHONPATH liegen, kann man
+diese so aufrufen, als wenn sie ein Packet wären.</p>
+
+<pre><code class="language-python">	import sys
+	
+	sys.path.append('./one/')
+	sys.path.append('./two/')
+	
+	from foo.bar import foobar, barfoo
+	
+	foobar.my_method()
+	barfoo.my_method()
+</code></pre>
+
+<p>Den Quellcode zu diesem Beispiel habe ich auf Bitbucket veröffentlicht:
+<a href="http://bitbucket.org/jblawatt/python-namespace-example">http://bitbucket.org/jblawatt/python-namespace-example</a></p>
+
+            <br>
+            <p><a href="/blog/">Zurück zur Übersicht</a></p>
+        </div>
+        <div class="disqus">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blawatt';
+    var disqus_identifier = '\/blog\/python-namespaces\/';
+    var disqus_title = 'Python Namespaces';
+    var disqus_url = '\/blog\/python-namespaces\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</section>
+
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js"></script>
+
+
+
+</body>
+</html>
+

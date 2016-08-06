@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       MySQL Equivalent zu ORACLE&#39;s initcap 
+    
+  </title>
+  <link rel="canonical" href="/blog/mysql-oracle-initcap-equivalent/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-sql.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        MySQL Equivalent zu ORACLE&#39;s initcap
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+        <div class="meta">
+            <span class="date" title="Fri Apr 11 2008 00:00:00 UTC">Apr 11, 2008</span>
+            
+        </div>
+        <div class="page-content">
+            <p>Die Funktion <strong>initcap</strong> des <em>DBMS ORACLE</em> verwandelt jedes erste
+Zeichen eines Wortes in einem übergebenen String in ein Großbuchstaben,
+der Rest wird klein geschrieben.</p>
+
+<p><strong>Beispiel:</strong></p>
+
+<pre><code class="language-sql">    select initcap('jens blawatt') from dual;
+</code></pre>
+
+<p><strong>Ergebnis:</strong></p>
+
+<pre><code class="language-bash">    Jens Blawatt
+</code></pre>
+
+<p>Diese Funktion gibt es leider in MySQL nicht. Es ist jedoch möglich
+eigene Funktionen zu schreiben. Hier ist also meine MySQL initcap
+Version (unter dem Quellcode gibt es die Downloadmöglichkeit):</p>
+
+<pre><code class="language-sql">    DELIMITER $$
+    
+    DROP FUNCTION IF EXISTS initcap$$
+    
+    CREATE FUNCTION initcap( param VARCHAR(255) )
+        RETURNS VARCHAR(255)
+        /*
+        * Author : Jens Blawatt
+        * Website : http://www.Blawatt.de
+        * Description : A MySQL equivalent to ORACLE's initcap
+        */
+        BEGIN
+            DECLARE result VARCHAR(255) default '';
+            DECLARE tmp VARCHAR(255) default '';
+    
+            -- endless repeat
+            WHILE  1 = 1 DO
+                -- if it's the end of the blank spearated string
+                IF INSTR(TRIM(param) , ' ') = 0 THEN
+                    return trim(concat(result, UCASE(LEFT(param,1)),LOWER(SUBSTR(param,2))));
+                END IF;
+        
+                -- split the first part to tmp
+                SET tmp = SUBSTR(param, 1, INSTR(param , ' '));
+    
+                -- write first character in capital letter rest in small type
+                SET result = CONCAT(result, UCASE(LEFT(tmp,1)),LOWER(SUBSTR(tmp,2)));
+    
+                -- remove splitted word from param string
+                SET param = SUBSTR(param, INSTR(param , ' ') + 1);
+            END WHILE;
+        END$$
+    
+    DELIMITER ;
+</code></pre>
+
+            <br>
+            <p><a href="/blog/">Zurück zur Übersicht</a></p>
+        </div>
+        <div class="disqus">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blawatt';
+    var disqus_identifier = '\/blog\/mysql-oracle-initcap-equivalent\/';
+    var disqus_title = 'MySQL Equivalent zu ORACLE\x27s initcap';
+    var disqus_url = '\/blog\/mysql-oracle-initcap-equivalent\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</section>
+
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-sql.min.js"></script>
+
+
+
+</body>
+</html>
+

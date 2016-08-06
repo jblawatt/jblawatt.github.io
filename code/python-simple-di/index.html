@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de-de">
+
+<head>
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base href="/">
+  <title>
+    
+    
+       Python Simple DI 
+    
+  </title>
+  <link rel="canonical" href="/code/python-simple-di/">
+  
+
+<script type="text/javascript">
+    var baseURL = '\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-default.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    
+        <link rel="stylesheet" href="//raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-atom-dark.css">
+    
+
+    
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="/img/favicon.ico"
+>
+
+
+
+</head>
+
+
+<body lang="de">
+  <div class="container">
+    <section class="header row">
+      <div class="columns twelve">
+        <a href="/"><div class="name">Jens Blawatt</div></a>
+        <nav>
+          <ul>
+            
+              <li><a href="/about/">About</a></li>
+            
+              <li><a href="/blog/">Blog</a></li>
+            
+              <li><a href="/code/">Code</a></li>
+            
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+<section class="row content">
+    <div class="columns twelve">
+        <div class="title-container">
+            <h1 class="page-heading">
+    
+        Python Simple DI
+    
+</h1>
+
+            <div class="initials"><a href="/"></a></div>
+        </div>
+         <div class="page-content">
+            
+
+<p><img src="https://drone.io/bitbucket.org/jblawatt/python-simple-di/status.png" alt="image" />
+<img src="https://img.shields.io/pypi/v/python-simple-di.svg" alt="image" /></p>
+
+<p><em>python-simple-di</em> is a simple dependency injection container implementation. With its help you can create instances and its dependencies on runtime.</p>
+
+<h2 id="changes">Changes</h2>
+
+<h3 id="1-6-0">1.6.0</h3>
+
+<ul>
+<li><strong>resolve many</strong>: the new methods resolve_many and resolve_many_lazy gives you the possibility to resolve multiple objects depending on their class.</li>
+<li><strong>alias names</strong>: you can provide a list of alias names within the object configuration.</li>
+<li><strong>constructor/factory (kw)argument overridies</strong>: resolve methods noch accepts args and kwargs that will can be used instead of args configurations.</li>
+<li><strong>register decorator</strong>: <code>register</code> can be used as decorator now.</li>
+<li><strong>use as contextmanager</strong>: the container can be used as context manager to temporarily override settings in <code>with</code> block.</li>
+</ul>
+
+<h3 id="1-5-2">1.5.2</h3>
+
+<ul>
+<li>copy settings in DIContainer.__init__.</li>
+</ul>
+
+<h2 id="install">Install</h2>
+
+<p>You can install it via pip: :</p>
+
+<pre><code class="language-sh">    pip install python-simple-di
+</code></pre>
+
+<p>or via easy_install: :</p>
+
+<pre><code class="language-sh">    easy_install -U python-simple-di
+</code></pre>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>To configure the <code>di.DIContainer</code> you need to pass a dict with the needed configuration in it. Alternativly you can use an instance of <code>di.DIConfig</code> which is used internal anyway. Define the objects name as <em>key</em> to access it at runtime. The <em>value</em> needs to be the configuration to create the instance.</p>
+
+<ul>
+<li><strong>type</strong> <em>(required)</em>: This option defines the type with its complete python dotted path or the python type instance. You can add a path that will dynamicly become added to the <code>sys.path</code> if the instance is requested. <em>Examples:</em></li>
+</ul>
+
+<pre><code class="language-python">'type': 'path.to.my.Type'
+'type': path.to.my.Type
+# or
+'type': '/add/to/sys/path:add.to.sys.path.Type'
+</code></pre>
+
+<ul>
+<li><strong>args</strong> <em>(optional)</em>: The args can either be a <code>list</code> of values to pass as Arguments or a <code>dict</code> to pass as Keyword Arguments. To mix both, you can define a dictionary with an empty string or None as key and a list as value. <em>Examples:</em></li>
+</ul>
+
+<pre><code class="language-python">'args': ['first', 3, 'third']
+# or
+'args': {'one': '1', 'two':'two'}
+# or
+'args': {'': [1, 'two'], 'three': 3}
+</code></pre>
+
+<ul>
+<li><strong>lazy</strong> <em>(optional)</em>: This option defines whether the instance will be created on runtime or on container initialization. <em>Example:</em></li>
+</ul>
+
+<pre><code class="language-python">'lazy': False # default: True
+</code></pre>
+
+<ul>
+<li><strong>singleton</strong> <em>(optional, default: True)</em>: If this option is set to <code>True</code>, the created instance will be saved inside the container. Next time the same instance will be returned. If this value is set to <code>False</code> a new instance will be created every time.</li>
+<li><strong>properties</strong> <em>(optional)</em>: This option is similar to the <code>args</code> option. After an instance was created a buildup is called. This buildup fills the given properties with the given values in this dictionary. <em>Examples:</em></li>
+</ul>
+
+<pre><code class="language-python">{
+    'type': 'some.Person',
+    'propeties': {
+        'first_name': 'John',
+        'last_name': 'Doe'
+    }
+}
+</code></pre>
+
+<ul>
+<li><strong>assert_type</strong> <em>(optional)</em>: Checks weather the created type has the given base_type.</li>
+</ul>
+
+<pre><code class="language-python">'type': 'path.to.implementet.Type',
+'assert_type': 'path.to.parent.Type'
+</code></pre>
+
+<ul>
+<li><strong>factory_method</strong> <em>(optional)</em>: This options can be used to create an instance by a classmethod which creates the wanted instance. For example this can be used to create a class based views in django at runtime. <em>Example:</em></li>
+</ul>
+
+<pre><code class="language-python">'type': 'myapp.views.ClassBasedView',
+'factory_method': 'as_view'
+</code></pre>
+
+<h3 id="argument-resolvers">Argument Resolvers</h3>
+
+<p>With the help of the resolver the magic comes into play. Thanks to this small classes it is possible to trigger the dependencies of a type at runtime.</p>
+
+<p>The following resolver be brought by the default package. Individual resolver can be implemented by extending the base class <code>di.Resolver</code>.</p>
+
+<h4 id="referenceresolver">ReferenceResolver</h4>
+
+<p>The ReferenceResolver offers the possibility to an attribute within the python path to refer. This must be the path and the object, as a Python dotted path.</p>
+
+<p><em>Example:</em></p>
+
+<pre><code class="language-python">{
+    'args': {
+        'output_stream': ReferenceResolver('sys.stdout')
+    }
+}
+</code></pre>
+
+<p>di also provides some shortcuts for this name:</p>
+
+<ul>
+<li><code>di.ref('sys.stdout')</code> as shortcut for type.</li>
+<li><code>di.reference('sys.stdout')</code> as shortcut for the type.</li>
+<li><code>'ref:sys.stdout'</code> as prefix of the configured type to lazy use the resolver.</li>
+</ul>
+
+<h4 id="relationresolver">RelationResolver</h4>
+
+<p>The RelationResolver allows the resolution of an object of this container at runtime.</p>
+
+<p><em>Example:</em></p>
+
+<pre><code class="language-python">{
+    'object_a': {
+        'type': 'some.ClassName'
+    },
+    'object_b': {
+        'type': 'some.other.ClassName',
+        'args': [
+            RelationResolver('object_a')
+        ]
+    },
+}
+</code></pre>
+
+<p>di also provides some shortcuts for this name:</p>
+
+<ul>
+<li><code>di.rel('object_a')</code> as shortcut for type.</li>
+<li><code>di.relation('object_a')</code> as shortcut for the type.</li>
+<li><code>'rel:object_a'</code> as prefix of the configured type to lazy use the resolver.</li>
+</ul>
+
+<h4 id="moduleresover">ModuleResover</h4>
+
+<p>Sometimes it may be necessary to pass an entire module as a parameter. For this purpose the ModuleResolver available.</p>
+
+<p><em>Example:</em></p>
+
+<pre><code class="language-python">{
+    'type': 'some.ClassName',
+    'args': {
+        'serializer': ModuleResolver('json')
+    }
+}
+</code></pre>
+
+<p>Di also provides some shortcuts for this name.</p>
+
+<ul>
+<li><code>di.mod('json')</code> as shortcut for type.</li>
+<li><code>di.module('json')</code> as shortcut for the type.</li>
+<li><code>'mod:json'</code> as prefix of the configured type to lazy use the resolver.</li>
+</ul>
+
+<h4 id="factoryresolver">FactoryResolver</h4>
+
+<p>With the help of FactoryResolver the return value of a function as an argument can be passed to the specified type.</p>
+
+<p><em>Example.</em></p>
+
+<pre><code class="language-python">{
+    'type': 'some.ClassName',
+    'args': [
+        FactoryResolver('path.to.the.factory_method')
+    ]
+}
+</code></pre>
+
+<p>Di also provides some shortcuts for this name.</p>
+
+<ul>
+<li><code>di.fac('path.to.the.factory_method')</code> as shortcut for type.</li>
+<li><code>di.factory('path.to.the.factory_method')</code> as shortcut for the type.</li>
+<li><code>'factory:path.to.the.factory_method'</code> as prefix of the configured type to lazy use the resolver.</li>
+</ul>
+
+<h4 id="attributeresolver">AttributeResolver</h4>
+
+<p>With the Resolver an attribute of an instance can be passed as an argument. This can be very useful if you are using the django web framework and want to pass a settings value as an argument fo an instance.</p>
+
+<p><em>Example:</em></p>
+
+<pre><code class="language-python">{
+    'type': 'some.ClassName':
+    'args': {
+        'debug': AttributeResolver('django.conf.settings.DEBUG')
+    }
+}
+</code></pre>
+
+<p>Di also provides some shortcuts for this name.</p>
+
+<ul>
+<li><code>di.attr('django.conf.settings.DEBUG')</code> as shortcut for type.</li>
+<li><code>di.attribute('django.conf.settings.DEBUG')</code> as shortcut for the type.</li>
+<li><code>'attr:django.conf.settings.DEBUG'</code> as prefix of the configured type to lazy use the resolver.</li>
+</ul>
+
+<h3 id="events">Events</h3>
+
+<p>You can pass an EventDispatcher into the DiContainer. This Dispatcher will be called if anything interesting happens inside the Container. BaseType is <code>di.DIEventDispatcher</code>.</p>
+
+<h4 id="usage">Usage</h4>
+
+<p>Simply create a dictionary with your type configuration and pass it as settings argument to the <code>DIContainer</code>. The Dictionarys key is the type key to resolve the instance.</p>
+
+<pre><code class="language-python"># create the container
+container = DIContainer(config)
+
+# resolve the instance
+instance = container.resolve('instance_key')
+
+# resolve the instance type only
+type_of_instance_key = container.resolve_type('instance_key')
+</code></pre>
+
+<h3 id="resolve-lazy">Resolve Lazy</h3>
+
+<p>Sometimes it may be necessary to create an instance at its first useage. So there are the following two messages, that returns a <code>di.Proxy</code> instance at first.</p>
+
+<p>To use this Feature you need to provide a <code>proxy_type_name</code> and install the specific package for this. I recommend <code>lazy-object-proxy</code> with its type <code>Proxy</code>. Which is the default value for this argument. It is not shipped with this package because of the many different other implementations and thier different licence. If you use this in combination with django you can use <code>django.utils.functional.SimpleLazyObject</code>. <strong>But at this moment the <code>resolve_type_lazy</code> is not working properly with <code>SimpleLazyObject</code></strong>.</p>
+
+<pre><code class="language-python"># create the container
+container = DIContainer(config, proxy_type_name='lazy_object_proxy.Proxy')
+
+# lazy resolves the instance
+instance = container.resolve_lazy('instance_key')
+
+# lazy resolves the instance type only
+type_of_instance_key = container.resolve_type_lazy('instance_key')
+</code></pre>
+
+<h3 id="child-container">Child Container</h3>
+
+<p>If you need the same container but override some settings you can create a child container and pass the deviant settings into it.</p>
+
+<p>This is the unittest that explains this function at its best.</p>
+
+<pre><code class="language-python">container = DIContainer({
+    'one': {
+        'type': 'mock.Mock',
+        'properties': {
+            'source': 'parent'
+        }
+    },
+    'two': {
+        'type': 'mock.Mock',
+        'properties': {
+            'source': 'parent'
+        }
+    }
+})
+
+self.assertEqual(container.one.source, 'parent')
+self.assertEqual(container.two.source, 'parent')
+
+child_container = container.create_child_container({
+    'two': {
+        'type': 'mock.Mock',
+        'properties': {
+            'source': 'child'
+        }
+    }
+})
+
+self.assertEqual(child_container.one.source, 'parent')
+self.assertEqual(child_container.two.source, 'child')
+self.assertEqual(container.one.source, 'parent')
+self.assertEqual(container.two.source, 'parent')
+</code></pre>
+
+<h3 id="decorators">Decorators</h3>
+
+<p>Some method of the <code>di.DIContainer</code> can be used as decorator zu register or inject instances within your code.</p>
+
+<h4 id="register-by-decorator">Register by decorator</h4>
+
+<p>The method register can be used as decorator for classes or factory methods. With this you do not need to provide the instances configuration at container creation.</p>
+
+<p>Passing the settings is optional.</p>
+
+<pre><code class="language-python">@container.register(&quot;my_service&quot;, dict(args={'init_arg': 'test'}))
+class MyService(object):
+
+    def __init__(self, init_arg):
+        self.init_arg = init_arg
+
+    def get_data(self, args):
+        pass
+</code></pre>
+
+<h4 id="inject-with-decorator">Inject with decorator</h4>
+
+<p>The method <code>inject</code> gives you the possibility to inject instances into a method if a keyword argument was not provided. that makes the loosely coupeling and testing very easy:</p>
+
+<pre><code class="language-python">@container.inject(service='some_service')
+def some_method(value, service):
+    service.do_work(value)
+
+some_method(&quot;hello world&quot;)
+some_method(&quot;hello world&quot;, ExplicitService())
+</code></pre>
+
+<h4 id="inject-many-with-decorator">Inject many with decorator</h4>
+
+<p>The method <code>inject_many</code> gives you the possibility to inject multiple instances depending on their type.</p>
+
+<pre><code class="language-python">@container.inject_many(hooks=SomeHookClass)
+def method(data, hook_instances):
+    for hook in hook_instance:
+        hook.hook(data)
+    # ...
+</code></pre>
+
+        </div>
+    </div>
+</section>
+    <section class="icons row content">
+        <div class="columns ten">
+            
+                <a href="//github.com/jblawatt" target="_blank">
+                    <i class="fa fa-github"></i>
+                </a>
+            
+
+            
+                <a href="//twitter.com/jblawatt" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            
+
+            
+
+            
+
+            
+
+            
+                <a href="mailto:jblawatt@googlemail.com">
+                    <i class="fa fa-envelope"></i>
+                </a>
+            
+        </div>
+        <div class="columns two">
+            <a href="/impressum/">Impressum</a>
+        </div>
+    </section>
+
+    <section class="copyright row">
+        <div class="columns twelve">
+            Copyright (c) 2016, Jens Blawatt; all rights reserved. <br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a>, Theme <a href="http://github.com/jblawatt/hugo-theme-skeleton" target="_blank">skeleton</a> designed by <a href="http://www.blawatt.de" target="_blank">Jens Blawatt</a>
+        </div>
+    </section>
+
+</div> 
+
+
+
+
+<script type="text/javascript" src="/js/prism.min.js"></script>
+<script type="text/javascript" src="/js/cookie.notice.js"></script>
+
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-python.min.js"></script>
+
+
+
+</body>
+</html>
+
