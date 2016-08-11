@@ -4,6 +4,7 @@
   <url>
     <loc>/</loc>
     <lastmod>2016-06-30T14:52:15+02:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -17,23 +18,8 @@
   </url>
   
   <url>
-    <loc>/code/hugo-skeleton-theme/</loc>
-    <lastmod>2016-04-11T19:15:48+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/page/impressum/</loc>
-    <lastmod>2016-04-11T19:15:48+02:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/code/python-simple-di/</loc>
     <lastmod>2016-04-11T19:15:48+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/about___/</loc>
-    <lastmod>2016-03-16T18:38:30+01:00</lastmod>
   </url>
   
   <url>
@@ -58,11 +44,6 @@
   
   <url>
     <loc>/about/042012-now-gws/</loc>
-    <lastmod>2012-04-01T18:38:30+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/about/082016-now-itsystemsmanager/</loc>
     <lastmod>2012-04-01T18:38:30+01:00</lastmod>
   </url>
   

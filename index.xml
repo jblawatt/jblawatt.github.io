@@ -75,26 +75,6 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
     </item>
     
     <item>
-      <title>Hugo Skeleton Theme</title>
-      <link>/code/hugo-skeleton-theme/</link>
-      <pubDate>Mon, 11 Apr 2016 19:15:48 +0200</pubDate>
-      
-      <guid>/code/hugo-skeleton-theme/</guid>
-      <description>&lt;p&gt;Hello World&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Hugo Skeleton Theme</title>
-      <link>/page/impressum/</link>
-      <pubDate>Mon, 11 Apr 2016 19:15:48 +0200</pubDate>
-      
-      <guid>/page/impressum/</guid>
-      <description>&lt;p&gt;Hello World&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Python Simple DI</title>
       <link>/code/python-simple-di/</link>
       <pubDate>Mon, 11 Apr 2016 19:15:48 +0200</pubDate>
@@ -107,9 +87,9 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 
 &lt;p&gt;&lt;em&gt;python-simple-di&lt;/em&gt; is a simple dependency injection container implementation. With its help you can create instances and its dependencies on runtime.&lt;/p&gt;
 
-&lt;h2 id=&#34;changes&#34;&gt;Changes&lt;/h2&gt;
+&lt;h2 id=&#34;changes:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Changes&lt;/h2&gt;
 
-&lt;h3 id=&#34;1-6-0&#34;&gt;1.6.0&lt;/h3&gt;
+&lt;h3 id=&#34;1-6-0:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;1.6.0&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;resolve many&lt;/strong&gt;: the new methods resolve_many and resolve_many_lazy gives you the possibility to resolve multiple objects depending on their class.&lt;/li&gt;
@@ -119,13 +99,13 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;strong&gt;use as contextmanager&lt;/strong&gt;: the container can be used as context manager to temporarily override settings in &lt;code&gt;with&lt;/code&gt; block.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;1-5-2&#34;&gt;1.5.2&lt;/h3&gt;
+&lt;h3 id=&#34;1-5-2:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;1.5.2&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;copy settings in DIContainer.__init__.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
+&lt;h2 id=&#34;install:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Install&lt;/h2&gt;
 
 &lt;p&gt;You can install it via pip: :&lt;/p&gt;
 
@@ -137,7 +117,7 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;    easy_install -U python-simple-di
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;configuration&#34;&gt;Configuration&lt;/h2&gt;
+&lt;h2 id=&#34;configuration:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Configuration&lt;/h2&gt;
 
 &lt;p&gt;To configure the &lt;code&gt;di.DIContainer&lt;/code&gt; you need to pass a dict with the needed configuration in it. Alternativly you can use an instance of &lt;code&gt;di.DIConfig&lt;/code&gt; which is used internal anyway. Define the objects name as &lt;em&gt;key&lt;/em&gt; to access it at runtime. The &lt;em&gt;value&lt;/em&gt; needs to be the configuration to create the instance.&lt;/p&gt;
 
@@ -199,13 +179,13 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &#39;factory_method&#39;: &#39;as_view&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;argument-resolvers&#34;&gt;Argument Resolvers&lt;/h3&gt;
+&lt;h3 id=&#34;argument-resolvers:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Argument Resolvers&lt;/h3&gt;
 
 &lt;p&gt;With the help of the resolver the magic comes into play. Thanks to this small classes it is possible to trigger the dependencies of a type at runtime.&lt;/p&gt;
 
 &lt;p&gt;The following resolver be brought by the default package. Individual resolver can be implemented by extending the base class &lt;code&gt;di.Resolver&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;referenceresolver&#34;&gt;ReferenceResolver&lt;/h4&gt;
+&lt;h4 id=&#34;referenceresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;ReferenceResolver&lt;/h4&gt;
 
 &lt;p&gt;The ReferenceResolver offers the possibility to an attribute within the python path to refer. This must be the path and the object, as a Python dotted path.&lt;/p&gt;
 
@@ -226,7 +206,7 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;code&gt;&#39;ref:sys.stdout&#39;&lt;/code&gt; as prefix of the configured type to lazy use the resolver.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;relationresolver&#34;&gt;RelationResolver&lt;/h4&gt;
+&lt;h4 id=&#34;relationresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;RelationResolver&lt;/h4&gt;
 
 &lt;p&gt;The RelationResolver allows the resolution of an object of this container at runtime.&lt;/p&gt;
 
@@ -253,7 +233,7 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;code&gt;&#39;rel:object_a&#39;&lt;/code&gt; as prefix of the configured type to lazy use the resolver.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;moduleresover&#34;&gt;ModuleResover&lt;/h4&gt;
+&lt;h4 id=&#34;moduleresover:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;ModuleResover&lt;/h4&gt;
 
 &lt;p&gt;Sometimes it may be necessary to pass an entire module as a parameter. For this purpose the ModuleResolver available.&lt;/p&gt;
 
@@ -275,7 +255,7 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;code&gt;&#39;mod:json&#39;&lt;/code&gt; as prefix of the configured type to lazy use the resolver.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;factoryresolver&#34;&gt;FactoryResolver&lt;/h4&gt;
+&lt;h4 id=&#34;factoryresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;FactoryResolver&lt;/h4&gt;
 
 &lt;p&gt;With the help of FactoryResolver the return value of a function as an argument can be passed to the specified type.&lt;/p&gt;
 
@@ -297,7 +277,7 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;code&gt;&#39;factory:path.to.the.factory_method&#39;&lt;/code&gt; as prefix of the configured type to lazy use the resolver.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&#34;attributeresolver&#34;&gt;AttributeResolver&lt;/h4&gt;
+&lt;h4 id=&#34;attributeresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;AttributeResolver&lt;/h4&gt;
 
 &lt;p&gt;With the Resolver an attribute of an instance can be passed as an argument. This can be very useful if you are using the django web framework and want to pass a settings value as an argument fo an instance.&lt;/p&gt;
 
@@ -319,11 +299,11 @@ Ich widerspreche an dieser Stelle der Nutzung meiner Kontaktdaten, um mir damit 
 &lt;li&gt;&lt;code&gt;&#39;attr:django.conf.settings.DEBUG&#39;&lt;/code&gt; as prefix of the configured type to lazy use the resolver.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;events&#34;&gt;Events&lt;/h3&gt;
+&lt;h3 id=&#34;events:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Events&lt;/h3&gt;
 
 &lt;p&gt;You can pass an EventDispatcher into the DiContainer. This Dispatcher will be called if anything interesting happens inside the Container. BaseType is &lt;code&gt;di.DIEventDispatcher&lt;/code&gt;.&lt;/p&gt;
 
-&lt;h4 id=&#34;usage&#34;&gt;Usage&lt;/h4&gt;
+&lt;h4 id=&#34;usage:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Usage&lt;/h4&gt;
 
 &lt;p&gt;Simply create a dictionary with your type configuration and pass it as settings argument to the &lt;code&gt;DIContainer&lt;/code&gt;. The Dictionarys key is the type key to resolve the instance.&lt;/p&gt;
 
@@ -337,7 +317,7 @@ instance = container.resolve(&#39;instance_key&#39;)
 type_of_instance_key = container.resolve_type(&#39;instance_key&#39;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;resolve-lazy&#34;&gt;Resolve Lazy&lt;/h3&gt;
+&lt;h3 id=&#34;resolve-lazy:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Resolve Lazy&lt;/h3&gt;
 
 &lt;p&gt;Sometimes it may be necessary to create an instance at its first useage. So there are the following two messages, that returns a &lt;code&gt;di.Proxy&lt;/code&gt; instance at first.&lt;/p&gt;
 
@@ -353,7 +333,7 @@ instance = container.resolve_lazy(&#39;instance_key&#39;)
 type_of_instance_key = container.resolve_type_lazy(&#39;instance_key&#39;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;child-container&#34;&gt;Child Container&lt;/h3&gt;
+&lt;h3 id=&#34;child-container:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Child Container&lt;/h3&gt;
 
 &lt;p&gt;If you need the same container but override some settings you can create a child container and pass the deviant settings into it.&lt;/p&gt;
 
@@ -392,11 +372,11 @@ self.assertEqual(container.one.source, &#39;parent&#39;)
 self.assertEqual(container.two.source, &#39;parent&#39;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;decorators&#34;&gt;Decorators&lt;/h3&gt;
+&lt;h3 id=&#34;decorators:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Decorators&lt;/h3&gt;
 
 &lt;p&gt;Some method of the &lt;code&gt;di.DIContainer&lt;/code&gt; can be used as decorator zu register or inject instances within your code.&lt;/p&gt;
 
-&lt;h4 id=&#34;register-by-decorator&#34;&gt;Register by decorator&lt;/h4&gt;
+&lt;h4 id=&#34;register-by-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Register by decorator&lt;/h4&gt;
 
 &lt;p&gt;The method register can be used as decorator for classes or factory methods. With this you do not need to provide the instances configuration at container creation.&lt;/p&gt;
 
@@ -412,7 +392,7 @@ class MyService(object):
         pass
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;inject-with-decorator&#34;&gt;Inject with decorator&lt;/h4&gt;
+&lt;h4 id=&#34;inject-with-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Inject with decorator&lt;/h4&gt;
 
 &lt;p&gt;The method &lt;code&gt;inject&lt;/code&gt; gives you the possibility to inject instances into a method if a keyword argument was not provided. that makes the loosely coupeling and testing very easy:&lt;/p&gt;
 
@@ -424,7 +404,7 @@ some_method(&amp;quot;hello world&amp;quot;)
 some_method(&amp;quot;hello world&amp;quot;, ExplicitService())
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;inject-many-with-decorator&#34;&gt;Inject many with decorator&lt;/h4&gt;
+&lt;h4 id=&#34;inject-many-with-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf&#34;&gt;Inject many with decorator&lt;/h4&gt;
 
 &lt;p&gt;The method &lt;code&gt;inject_many&lt;/code&gt; gives you the possibility to inject multiple instances depending on their type.&lt;/p&gt;
 
@@ -434,46 +414,6 @@ def method(data, hook_instances):
         hook.hook(data)
     # ...
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>about me</title>
-      <link>/about___/</link>
-      <pubDate>Wed, 16 Mar 2016 18:38:30 +0100</pubDate>
-      
-      <guid>/about___/</guid>
-      <description>
-
-&lt;p&gt;&lt;img src=&#34;/images/jens-blawatt.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;On this site i would like to introduce myself.&lt;/p&gt;
-
-&lt;p&gt;My Name is &lt;strong&gt;Jens Blawatt&lt;/strong&gt;. I am a &lt;em&gt;softwaredeveloper&lt;/em&gt; and &lt;em&gt;-architect&lt;/em&gt; at &lt;a href=&#34;http://www.gws.ms/&#34;&gt;GWS
-mbH&lt;/a&gt; in Münster, Germany. I primary work on b2b-shops and online portals based on &lt;a href=&#34;http://www.python.org&#34;&gt;python&lt;/a&gt; using &lt;a href=&#34;http://www.djangoproject.com&#34;&gt;Django Webframework&lt;/a&gt; connected to your central products &lt;em&gt;gevis ERP|NAV &amp;trade;&lt;/em&gt; and &lt;em&gt;gevis ERP|AX &amp;trade;&lt;/em&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;professional-career&#34;&gt;professional career&lt;/h2&gt;
-
-&lt;p&gt;I made my education as &lt;em&gt;IT specialist für application development&lt;/em&gt; at &lt;a href=&#34;http://www.citeq.de&#34;&gt;citeq&lt;/a&gt; which is a part of the manicipality of Münster.
-Working on .NET based webservices and client/server applications as well as oracle database development had been my key business there.&lt;/p&gt;
-
-&lt;p&gt;After that i was employed there for another three years before i decited to change my employment and work for &lt;a href=&#34;http://www.gms.ms/&#34;&gt;GWSmbH&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Before i became part of the architecture team working on b2b-shops i was developing closed portals for &amp;hellip;&lt;/p&gt;
-
-&lt;div class=&#34;row&#34;&gt;
-    &lt;div class=&#34;columns three&#34;&gt;
-        &lt;div class=&#34;time&#34;&gt;
-            2014 - now
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&#34;columns nine&#34;&gt;
-        &lt;div class=&#34;info-arrow&#34;&gt;&amp;nbsp;&lt;/div&gt;
-        &lt;div class=&#34;info&#34;&gt;
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, el
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
 </description>
     </item>
     
@@ -699,7 +639,7 @@ und als Erinnerung für mich ;-).&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;/images/gvim-as-ide.png?width=800&amp;amp;height=800&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;vim-setup&#34;&gt;Vim Setup&lt;/h2&gt;
+&lt;h2 id=&#34;vim-setup:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Vim Setup&lt;/h2&gt;
 
 &lt;p&gt;Ich gehe davon aus, dass (g)vim bereits auf dem System installiert ist.
 Ist dies nicht der Fall, kann er unter &lt;a href=&#34;http://www.vim.org&#34;&gt;vim.org&lt;/a&gt;
@@ -709,7 +649,7 @@ heruntergeladen werden.&lt;/p&gt;
 .vimrc und den Ordner für die benutzerspezifische Konfiguration .vim im
 Home-Verzeichnis geben.&lt;/p&gt;
 
-&lt;h3 id=&#34;vimrc&#34;&gt;.vimrc&lt;/h3&gt;
+&lt;h3 id=&#34;vimrc:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;.vimrc&lt;/h3&gt;
 
 &lt;p&gt;In der .vimrc kann man einige Einstellungen festlegen, denen man sich
 die Arbeit mit vim erleichtern.&lt;/p&gt;
@@ -768,7 +708,7 @@ die Arbeit mit vim erleichtern.&lt;/p&gt;
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;plugins&#34;&gt;Plugins&lt;/h2&gt;
+&lt;h2 id=&#34;plugins:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Plugins&lt;/h2&gt;
 
 &lt;p&gt;(g)vim ist ein sehr felxibler, modularer Editor, für den des eine Menge
 Erweiterungen gibt. Zu finden sind diese u.a. unter
@@ -778,7 +718,7 @@ Erweiterungen gibt. Zu finden sind diese u.a. unter
 Powerline, möchte ich an dieser Stelle kurz vorstellen. Demnächst folgen
 dann noch weitere Reviews.&lt;/p&gt;
 
-&lt;h3 id=&#34;pathogen&#34;&gt;Pathogen&lt;/h3&gt;
+&lt;h3 id=&#34;pathogen:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Pathogen&lt;/h3&gt;
 
 &lt;p&gt;Pathogen ist eine Plugin, mit dem es nicht mehr erforderlich ist die
 einzelnen Plugins, die man so installierne möchte, auf die vielen
@@ -801,7 +741,7 @@ werden dann beim Start von vim die Plugins automatisch geladen.&lt;/p&gt;
 &lt;p&gt;Ab jetzt kann jedes Plugin einfach nach ~/.vim/bundle/PLUGIN_NAME/
 entpackt werden.&lt;/p&gt;
 
-&lt;h3 id=&#34;powerline&#34;&gt;powerline&lt;/h3&gt;
+&lt;h3 id=&#34;powerline:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;powerline&lt;/h3&gt;
 
 &lt;p&gt;Die Powerline ist eine Erweiterung, die zusätzliche Informationen zur
 geöffneten Datei, dem Ornder, dem DVCS Branch, usw. anzeigt.&lt;/p&gt;
@@ -912,16 +852,6 @@ diese so aufrufen, als wenn sie ein Packet wären.&lt;/p&gt;
 &lt;span class=&#34;label&#34;&gt;Backbone&lt;/span&gt;
 &lt;span class=&#34;label&#34;&gt;jQuery&lt;/span&gt;
 &lt;span class=&#34;label&#34;&gt;Software Architecture&lt;/span&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>IT Project Manager</title>
-      <link>/about/082016-now-itsystemsmanager/</link>
-      <pubDate>Sun, 01 Apr 2012 18:38:30 +0100</pubDate>
-      
-      <guid>/about/082016-now-itsystemsmanager/</guid>
-      <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
 </description>
     </item>
     

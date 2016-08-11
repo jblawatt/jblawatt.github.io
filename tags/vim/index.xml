@@ -31,7 +31,7 @@ und als Erinnerung für mich ;-).&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;/images/gvim-as-ide.png?width=800&amp;amp;height=800&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;vim-setup&#34;&gt;Vim Setup&lt;/h2&gt;
+&lt;h2 id=&#34;vim-setup:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Vim Setup&lt;/h2&gt;
 
 &lt;p&gt;Ich gehe davon aus, dass (g)vim bereits auf dem System installiert ist.
 Ist dies nicht der Fall, kann er unter &lt;a href=&#34;http://www.vim.org&#34;&gt;vim.org&lt;/a&gt;
@@ -41,7 +41,7 @@ heruntergeladen werden.&lt;/p&gt;
 .vimrc und den Ordner für die benutzerspezifische Konfiguration .vim im
 Home-Verzeichnis geben.&lt;/p&gt;
 
-&lt;h3 id=&#34;vimrc&#34;&gt;.vimrc&lt;/h3&gt;
+&lt;h3 id=&#34;vimrc:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;.vimrc&lt;/h3&gt;
 
 &lt;p&gt;In der .vimrc kann man einige Einstellungen festlegen, denen man sich
 die Arbeit mit vim erleichtern.&lt;/p&gt;
@@ -100,7 +100,7 @@ die Arbeit mit vim erleichtern.&lt;/p&gt;
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;plugins&#34;&gt;Plugins&lt;/h2&gt;
+&lt;h2 id=&#34;plugins:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Plugins&lt;/h2&gt;
 
 &lt;p&gt;(g)vim ist ein sehr felxibler, modularer Editor, für den des eine Menge
 Erweiterungen gibt. Zu finden sind diese u.a. unter
@@ -110,7 +110,7 @@ Erweiterungen gibt. Zu finden sind diese u.a. unter
 Powerline, möchte ich an dieser Stelle kurz vorstellen. Demnächst folgen
 dann noch weitere Reviews.&lt;/p&gt;
 
-&lt;h3 id=&#34;pathogen&#34;&gt;Pathogen&lt;/h3&gt;
+&lt;h3 id=&#34;pathogen:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;Pathogen&lt;/h3&gt;
 
 &lt;p&gt;Pathogen ist eine Plugin, mit dem es nicht mehr erforderlich ist die
 einzelnen Plugins, die man so installierne möchte, auf die vielen
@@ -133,7 +133,7 @@ werden dann beim Start von vim die Plugins automatisch geladen.&lt;/p&gt;
 &lt;p&gt;Ab jetzt kann jedes Plugin einfach nach ~/.vim/bundle/PLUGIN_NAME/
 entpackt werden.&lt;/p&gt;
 
-&lt;h3 id=&#34;powerline&#34;&gt;powerline&lt;/h3&gt;
+&lt;h3 id=&#34;powerline:c6b0ccb7e4be99ecf53dd520090c3d60&#34;&gt;powerline&lt;/h3&gt;
 
 &lt;p&gt;Die Powerline ist eine Erweiterung, die zusätzliche Informationen zur
 geöffneten Datei, dem Ornder, dem DVCS Branch, usw. anzeigt.&lt;/p&gt;

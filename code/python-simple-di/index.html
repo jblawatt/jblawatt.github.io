@@ -96,9 +96,9 @@
 
 <p><em>python-simple-di</em> is a simple dependency injection container implementation. With its help you can create instances and its dependencies on runtime.</p>
 
-<h2 id="changes">Changes</h2>
+<h2 id="changes:b9d70d09ee04e5ce52bdb90bdc0c38cf">Changes</h2>
 
-<h3 id="1-6-0">1.6.0</h3>
+<h3 id="1-6-0:b9d70d09ee04e5ce52bdb90bdc0c38cf">1.6.0</h3>
 
 <ul>
 <li><strong>resolve many</strong>: the new methods resolve_many and resolve_many_lazy gives you the possibility to resolve multiple objects depending on their class.</li>
@@ -108,13 +108,13 @@
 <li><strong>use as contextmanager</strong>: the container can be used as context manager to temporarily override settings in <code>with</code> block.</li>
 </ul>
 
-<h3 id="1-5-2">1.5.2</h3>
+<h3 id="1-5-2:b9d70d09ee04e5ce52bdb90bdc0c38cf">1.5.2</h3>
 
 <ul>
 <li>copy settings in DIContainer.__init__.</li>
 </ul>
 
-<h2 id="install">Install</h2>
+<h2 id="install:b9d70d09ee04e5ce52bdb90bdc0c38cf">Install</h2>
 
 <p>You can install it via pip: :</p>
 
@@ -126,7 +126,7 @@
 <pre><code class="language-sh">    easy_install -U python-simple-di
 </code></pre>
 
-<h2 id="configuration">Configuration</h2>
+<h2 id="configuration:b9d70d09ee04e5ce52bdb90bdc0c38cf">Configuration</h2>
 
 <p>To configure the <code>di.DIContainer</code> you need to pass a dict with the needed configuration in it. Alternativly you can use an instance of <code>di.DIConfig</code> which is used internal anyway. Define the objects name as <em>key</em> to access it at runtime. The <em>value</em> needs to be the configuration to create the instance.</p>
 
@@ -188,13 +188,13 @@
 'factory_method': 'as_view'
 </code></pre>
 
-<h3 id="argument-resolvers">Argument Resolvers</h3>
+<h3 id="argument-resolvers:b9d70d09ee04e5ce52bdb90bdc0c38cf">Argument Resolvers</h3>
 
 <p>With the help of the resolver the magic comes into play. Thanks to this small classes it is possible to trigger the dependencies of a type at runtime.</p>
 
 <p>The following resolver be brought by the default package. Individual resolver can be implemented by extending the base class <code>di.Resolver</code>.</p>
 
-<h4 id="referenceresolver">ReferenceResolver</h4>
+<h4 id="referenceresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf">ReferenceResolver</h4>
 
 <p>The ReferenceResolver offers the possibility to an attribute within the python path to refer. This must be the path and the object, as a Python dotted path.</p>
 
@@ -215,7 +215,7 @@
 <li><code>'ref:sys.stdout'</code> as prefix of the configured type to lazy use the resolver.</li>
 </ul>
 
-<h4 id="relationresolver">RelationResolver</h4>
+<h4 id="relationresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf">RelationResolver</h4>
 
 <p>The RelationResolver allows the resolution of an object of this container at runtime.</p>
 
@@ -242,7 +242,7 @@
 <li><code>'rel:object_a'</code> as prefix of the configured type to lazy use the resolver.</li>
 </ul>
 
-<h4 id="moduleresover">ModuleResover</h4>
+<h4 id="moduleresover:b9d70d09ee04e5ce52bdb90bdc0c38cf">ModuleResover</h4>
 
 <p>Sometimes it may be necessary to pass an entire module as a parameter. For this purpose the ModuleResolver available.</p>
 
@@ -264,7 +264,7 @@
 <li><code>'mod:json'</code> as prefix of the configured type to lazy use the resolver.</li>
 </ul>
 
-<h4 id="factoryresolver">FactoryResolver</h4>
+<h4 id="factoryresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf">FactoryResolver</h4>
 
 <p>With the help of FactoryResolver the return value of a function as an argument can be passed to the specified type.</p>
 
@@ -286,7 +286,7 @@
 <li><code>'factory:path.to.the.factory_method'</code> as prefix of the configured type to lazy use the resolver.</li>
 </ul>
 
-<h4 id="attributeresolver">AttributeResolver</h4>
+<h4 id="attributeresolver:b9d70d09ee04e5ce52bdb90bdc0c38cf">AttributeResolver</h4>
 
 <p>With the Resolver an attribute of an instance can be passed as an argument. This can be very useful if you are using the django web framework and want to pass a settings value as an argument fo an instance.</p>
 
@@ -308,11 +308,11 @@
 <li><code>'attr:django.conf.settings.DEBUG'</code> as prefix of the configured type to lazy use the resolver.</li>
 </ul>
 
-<h3 id="events">Events</h3>
+<h3 id="events:b9d70d09ee04e5ce52bdb90bdc0c38cf">Events</h3>
 
 <p>You can pass an EventDispatcher into the DiContainer. This Dispatcher will be called if anything interesting happens inside the Container. BaseType is <code>di.DIEventDispatcher</code>.</p>
 
-<h4 id="usage">Usage</h4>
+<h4 id="usage:b9d70d09ee04e5ce52bdb90bdc0c38cf">Usage</h4>
 
 <p>Simply create a dictionary with your type configuration and pass it as settings argument to the <code>DIContainer</code>. The Dictionarys key is the type key to resolve the instance.</p>
 
@@ -326,7 +326,7 @@ instance = container.resolve('instance_key')
 type_of_instance_key = container.resolve_type('instance_key')
 </code></pre>
 
-<h3 id="resolve-lazy">Resolve Lazy</h3>
+<h3 id="resolve-lazy:b9d70d09ee04e5ce52bdb90bdc0c38cf">Resolve Lazy</h3>
 
 <p>Sometimes it may be necessary to create an instance at its first useage. So there are the following two messages, that returns a <code>di.Proxy</code> instance at first.</p>
 
@@ -342,7 +342,7 @@ instance = container.resolve_lazy('instance_key')
 type_of_instance_key = container.resolve_type_lazy('instance_key')
 </code></pre>
 
-<h3 id="child-container">Child Container</h3>
+<h3 id="child-container:b9d70d09ee04e5ce52bdb90bdc0c38cf">Child Container</h3>
 
 <p>If you need the same container but override some settings you can create a child container and pass the deviant settings into it.</p>
 
@@ -381,11 +381,11 @@ self.assertEqual(container.one.source, 'parent')
 self.assertEqual(container.two.source, 'parent')
 </code></pre>
 
-<h3 id="decorators">Decorators</h3>
+<h3 id="decorators:b9d70d09ee04e5ce52bdb90bdc0c38cf">Decorators</h3>
 
 <p>Some method of the <code>di.DIContainer</code> can be used as decorator zu register or inject instances within your code.</p>
 
-<h4 id="register-by-decorator">Register by decorator</h4>
+<h4 id="register-by-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf">Register by decorator</h4>
 
 <p>The method register can be used as decorator for classes or factory methods. With this you do not need to provide the instances configuration at container creation.</p>
 
@@ -401,7 +401,7 @@ class MyService(object):
         pass
 </code></pre>
 
-<h4 id="inject-with-decorator">Inject with decorator</h4>
+<h4 id="inject-with-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf">Inject with decorator</h4>
 
 <p>The method <code>inject</code> gives you the possibility to inject instances into a method if a keyword argument was not provided. that makes the loosely coupeling and testing very easy:</p>
 
@@ -413,7 +413,7 @@ some_method(&quot;hello world&quot;)
 some_method(&quot;hello world&quot;, ExplicitService())
 </code></pre>
 
-<h4 id="inject-many-with-decorator">Inject many with decorator</h4>
+<h4 id="inject-many-with-decorator:b9d70d09ee04e5ce52bdb90bdc0c38cf">Inject many with decorator</h4>
 
 <p>The method <code>inject_many</code> gives you the possibility to inject multiple instances depending on their type.</p>
 
